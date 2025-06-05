@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import regbg from "../images/login-bg.png";
 import { useNavigate } from "react-router-dom";
 import emailjs from '@emailjs/browser';
-
+import axios from 'axios';
 
 function Register() {
     const navigate = useNavigate()
@@ -21,7 +21,7 @@ function Register() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match.");
@@ -36,21 +36,16 @@ function Register() {
             password: formData.password,
         };
 
-        localStorage.setItem("user", JSON.stringify(user));
-        alert("Registration Successful!");
-        navigate("/login");
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/register', user);
 
-        const templateParams = {
-            firstname: formData.firstname,
-            email: formData.email
-        };
+            alert("Registration Successful!");
+            navigate("/login");
 
-        emailjs.send('service_p7q4x4w', 'template_ut12p2o', templateParams, 'X7XOak-QE3shGZBWd')
-            .then((response) => {
-                console.log('Email Sent', response.status, response.text);
-            }, (error) => {
-                console.error('Failed to Send', error);
-            });
+        } catch (error) {
+            console.error("Registration failed", error.response?.data || error.message);
+            alert("Registration failed: " + (error.response?.data?.message || "Server Error"));
+        }
     };
 
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import userIcon from "../icons/user.png";
+import Userlocation from "../components/userlocation";
 
 function HomePage() {
     const navigate = useNavigate();
@@ -38,6 +39,7 @@ function HomePage() {
 
                 <div className="home-center">
                     <input type="search" id="search" name="search" className="home-input" placeholder="search anything..."/>
+                    <span className="home-location">📍 <Userlocation /></span>
                 </div>
 
                 <div className="home-right">
@@ -57,6 +59,9 @@ function HomePage() {
                     )}
                 </div>
             </header>
+            <div className="warning">
+                <h1>Work-in-progess<br />Coming soon!</h1>
+            </div>
         </div>
     );
 }

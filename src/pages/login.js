@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import regbg from "../images/login-bg.png";
+import axios from 'axios';
 
 function Login() {
 
@@ -18,15 +19,24 @@ function Login() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (
-            storedUser && storedUser.email === formData.email && storedUser.password === formData.password
-        ) {
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/auth/login', {
+                email: formData.email,
+                password: formData.password
+            });
+
+            localStorage.setItem("token", response.data.token);
+
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+
+            alert("login successful!");
             navigate("/home");
-        } else {
-            alert("Invalid Credentials!");
+        }  catch(error) {
+            console.error('Login Failed:', error.response?.data || error.message);
+            alert("Login failed: " + (error.response?.data?.message || "Invalid credentials"));
         }
     };
 
