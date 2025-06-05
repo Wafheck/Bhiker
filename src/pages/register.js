@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import regbg from "../images/login-bg.png";
 import { useNavigate } from "react-router-dom";
-import emailjs from '@emailjs/browser';
 import axios from 'axios';
 
 function Register() {
