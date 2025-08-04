@@ -28,7 +28,7 @@ mongoose.connection.on("error", (err) => {
 
 // SELF-PING SETUP - Add this section
 const RENDER_URL = 'https://bhiker.onrender.com'; // Your actual Render backend URL
-const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes in milliseconds
+const PING_INTERVAL = 4 * 60 * 1000; // 4 minutes in milliseconds
 
 function keepAlive() {
     axios.get(RENDER_URL)
