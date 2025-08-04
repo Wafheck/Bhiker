@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
                     <div style="font-family: system-ui, sans-serif, Arial; font-size: 16px; background-color: #fff8f1;">
                          <div style="max-width: 600px; margin: auto; padding: 16px;">
                             <a href="https://bhiker.me" target="_blank" rel="noopener">
-                                <img src="https://i.ibb.co/tFyjQZx/unnamed.png" alt="" style="max-width: 100%; height: auto;">
+                                <img src="https://i.ibb.co/kg91PM1Y/unnamed.png" alt="" style="max-width: 100%; height: auto;">
                             </a>
                         </div>
                         <div style="max-width: 600px; margin: auto; padding: 16px;">

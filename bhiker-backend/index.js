@@ -7,8 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: 'https://bhiker-thf3.onrender.com'
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    credentials: true
 }));
+
 app.use(express.json());
 
 const authRoutes = require("./routes/auth");
