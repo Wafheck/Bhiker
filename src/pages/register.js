@@ -41,6 +41,7 @@ function Register() {
 
         } catch (error) {
             console.error("Registration failed", error.response?.data || error.message);
+
             alert("Registration failed: " + (error.response?.data?.message || "Server Error"));
         }
     };
