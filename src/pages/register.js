@@ -35,7 +35,7 @@ function Register() {
         };
 
         try {
-            const response = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/register', user);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, user);
 
             navigate("/login");
 
