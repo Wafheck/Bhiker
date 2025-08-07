@@ -4,6 +4,12 @@
   padding: 0;
 }
 
+:root {
+  --highlight-text-color: #f39c12;
+  --border-radius: 12px;
+}
+
+
 body {
   font-family: 'Georgia', serif;
   color: #000;
@@ -28,6 +34,7 @@ body {
   font-size: 1.5rem;
   text-decoration: none;
   color: #000;
+  cursor: pointer;
 }
 
 .location {
@@ -197,7 +204,7 @@ body {
 
 .form-group {
   background-color: #f4f4f4;
-  padding: 5rem 5rem;
+  padding: 2rem 5rem;
   border-radius: 50px 50px 50px 50px;
 }
 
@@ -210,14 +217,32 @@ body {
   text-align: center;
 }
 
+.form-group .form-selectbutton {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.form-group SelectButton {
+  border: 1px solid black;
+  border-radius: 10px;
+  borderRadius: 'var(--border-radius)';
+  padding: 2rem 2rem;
+  margin-top: 1rem;
+}
+
+
 .form-group .login-link {
   text-align: center;
-  margin-top: 3rem;
+  margin-top: 1rem;
 }
 
 .form-group .login-link a {
   color: #0000FF;
   text-decoration: underline;
+}
+
+.form-group button {
+  font-weight: bold;
 }
 
 .home-header {
@@ -271,6 +296,12 @@ body {
   width: 300px;
 }
 
+.home-right {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .home-location {
   font-weight: lighter;
   text-align: center;
@@ -280,7 +311,7 @@ body {
 .usermenu-drop {
   position: absolute;
   top: 60px;
-  right: 0;
+  right: 10px;
   background: #ffffff;
   border: 1px solid #000;
   border-radius: 8px;
@@ -295,7 +326,7 @@ body {
   font-weight: bold;
 }
 
-.usermenu-drop2 {
+.usermenu-logout {
   color: #ffffff;
   background-color: darkred;
   padding: 10px 10px;
@@ -303,8 +334,59 @@ body {
   border-radius: 10px;
 }
 
+.addmenu-drop {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  background: #ffffff;
+  border: 1px solid black;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 10px;
+  width: 180px;
+  z-index: 1000;
+}
+
+.addmenu-drop1 {
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+
+.addmenu-drop1 :hover {
+  width: 100%;
+  background: #000000;
+  color: #ffffff;
+}
+
 .warning {
   text-align: center;
   font-weight: bold;
   font-size: 2rem;
+}
+
+.form-selectbutton label {
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+/* Increase font size and padding for the SelectButton container */
+.p-selectbutton {
+  font-size: 1rem;        /* larger text */
+  padding: 0.2rem 0;         /* vertical padding */
+}
+
+/* Make each individual button inside larger and wider */
+.p-selectbutton .p-button {
+  padding: 0.55rem 2rem;     /* top/bottom and left/right padding */
+  min-width: 120px;          /* minimum width of each button */
+  font-size: 1.1rem;
+  margin: 10px;
+  margin-bottom: -15px;
+  border: 1px solid black;
+  border-radius: 190px;
+}
+
+
+.p-selectbutton .p-button.p-highlight {
+  font-weight: bold;
 }

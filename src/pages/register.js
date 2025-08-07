@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SelectButton } from 'primereact/selectbutton';
 import axios from 'axios';
+
 
 function Register() {
     const navigate = useNavigate()
@@ -9,8 +11,14 @@ function Register() {
         lastname: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        role: 'user'
     });
+
+    const roleOptions = [
+        { label: 'User', value: 'user' },
+        { label: 'Vendor', value: 'vendor' }
+    ];
 
     const handleChange = (e) => {
         setFormData({
@@ -32,6 +40,7 @@ function Register() {
             lastname: formData.lastname,
             email: formData.email,
             password: formData.password,
+            role: formData.role,
         };
 
         try {
@@ -57,6 +66,16 @@ function Register() {
             <div className="register-container">
                 <form className="register-form" onSubmit={handleSubmit}>
                     <div className="form-group">
+                        <div className="form-selectbutton">
+                            <label>{formData.role} registration</label>
+                            <SelectButton
+                                style={{marginTop: '1rem'}}
+                                value={formData.role}
+                                options={roleOptions}
+                                onChange={(e) => setFormData({ ...formData, role: e.value })}
+                                allowEmpty={false}
+                            />
+                        </div>
                         <div className="form-firstname">
                             <label htmlFor="firstname">First Name:</label>
                             <div className="firstname-icon">

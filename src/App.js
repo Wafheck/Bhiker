@@ -5,7 +5,9 @@ import Register from './pages/register.js';
 import Login from './pages/login.js';
 import Browse from './pages/browse.js';
 import Layout from './pages/layout.js';
-import HomePage from './pages/home.js'
+import HomePage from './pages/home.js';
+import HomePageVendor from './pages/homevendor.js';
+import Addlisting from "./pages/addlisting.js";
 
 function App() {
     return (
@@ -17,6 +19,8 @@ function App() {
                 <Route path="register" element={<Register />} />
                 <Route path="login" element={<Login />} />
                 <Route path="home" element={<HomePage />} />
+                <Route path="homevendor" element={<HomePageVendor />} />
+                <Route path="addlisting" element={<Addlisting />} />
             </Routes>
         </BrowserRouter>
     );

@@ -52,7 +52,7 @@ function HomePage() {
                             <div className="usermenu-drop1">
                                 {user?.firstname} {user?.lastname}
                             </div>
-                            <button onClick={handleLogout} className="usermenu-drop2">
+                            <button onClick={handleLogout} className="usermenu-logout">
                                 Logout
                             </button>
                         </div>

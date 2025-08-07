@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SelectButton } from 'primereact/selectbutton';
 import regbg from "../images/login-bg.png";
 import axios from 'axios';
 
@@ -7,8 +8,14 @@ function Login() {
 
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        password: "",
+        role: "user"
     });
+
+    const roleOptions = [
+        { label: 'User', value: 'user' },
+        { label: 'Vendor', value: 'vendor' }
+    ];
 
     const navigate = useNavigate();
 
@@ -25,14 +32,20 @@ function Login() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                role: formData.role
             });
 
             localStorage.setItem("token", response.data.token);
 
             localStorage.setItem("user", JSON.stringify(response.data.user));
 
-            navigate("/home");
+            if (formData.role == 'user'){
+                navigate("/home");
+            }
+            else {
+                navigate("/homevendor");
+            }
         }  catch(error) {
             console.error('Login Failed:', error.response?.data || error.message);
             alert("Login failed: " + (error.response?.data?.message || "Invalid credentials"));
@@ -49,6 +62,16 @@ function Login() {
             <div className="register-container">
                 <form className="register-form" onSubmit={handleSubmit}>
                     <div className="form-group">
+                        <div className="form-selectbutton">
+                            <label>{formData.role} login</label>
+                            <SelectButton
+                                style={{marginTop: '1rem'}}
+                                value={formData.role}
+                                options={roleOptions}
+                                onChange={(e) => setFormData({ ...formData, role: e.value })}
+                                allowEmpty={false}
+                            />
+                        </div>
                         <div className="form-email">
                             <label htmlFor="email">Email:</label>
                             <div className="email-enter">
