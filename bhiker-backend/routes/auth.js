@@ -151,12 +151,11 @@ router.post("/login", async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: "Invalid Credentials" });
 
-        const isRoleMatch = await compare(role, user.role);
-        if (!isRoleMatch) return res.status(400).json({message: "Invalid Role"});
-
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid Credentials" });
 
+        const isRoleMatch = await compare(role, user.role);
+        if (!isRoleMatch) return res.status(400).json({message: "Invalid Role"});
 
         const token = jwt.sign(
             { userId: user._id, email: user.email, role: user.role },
