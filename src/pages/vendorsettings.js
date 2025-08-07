@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import userIcon from "../icons/user.png";
-import addIcon from "../icons/add.png";
 import Userlocation from "../components/userlocation";
+import addIcon from "../icons/add.png";
 
-function HomePageVendor() {
+function VendorSettings() {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -96,10 +96,11 @@ function HomePageVendor() {
                 </div>
             </header>
             <div className="warning">
+                <h1>Work-in-progess<br />Coming soon!</h1>
             </div>
         </div>
     );
 }
 
 
-export default HomePageVendor;
+export default VendorSettings;

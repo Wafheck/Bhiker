@@ -12,6 +12,8 @@ function Login() {
         role: "user"
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const roleOptions = [
         { label: 'User', value: 'user' },
         { label: 'Vendor', value: 'vendor' }
@@ -28,6 +30,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
@@ -47,6 +50,7 @@ function Login() {
                 navigate("/homevendor");
             }
         }  catch(error) {
+            setIsSubmitting(false);
             console.error('Login Failed:', error.response?.data || error.message);
             alert("Login failed: " + (error.response?.data?.message || "Invalid credentials"));
         }
@@ -70,22 +74,23 @@ function Login() {
                                 options={roleOptions}
                                 onChange={(e) => setFormData({ ...formData, role: e.value })}
                                 allowEmpty={false}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="form-email">
                             <label htmlFor="email">Email:</label>
                             <div className="email-enter">
-                                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+                                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="form-password">
                             <label htmlFor="password">Password:</label>
                             <div className="password-enter">
-                                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+                                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="submit-button">
-                            <button type="submit" className="register-button">Login</button>
+                            <button type="submit" className="register-button" disabled={isSubmitting}>Login</button>
                         </div>
                         <div className="login-link">
                             <p>Don't have an account yet? <a href='register'>Register here</a></p>

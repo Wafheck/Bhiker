@@ -5,7 +5,8 @@ import axios from 'axios';
 
 
 function Register() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -29,6 +30,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match.");
             return;
@@ -49,8 +51,8 @@ function Register() {
             navigate("/login");
 
         } catch (error) {
+            setIsSubmitting(false);
             console.error("Registration failed", error.response?.data || error.message);
-
             alert("Registration failed: " + (error.response?.data?.message || "Server Error"));
         }
     };
@@ -74,40 +76,41 @@ function Register() {
                                 options={roleOptions}
                                 onChange={(e) => setFormData({ ...formData, role: e.value })}
                                 allowEmpty={false}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="form-firstname">
                             <label htmlFor="firstname">First Name:</label>
                             <div className="firstname-icon">
-                                <input type="text" id="firstname" name="firstname" value={formData.firstname} onChange={handleChange} required />
+                                <input type="text" id="firstname" name="firstname" value={formData.firstname} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="form-lastname">
                             <label htmlFor="lastname">Last Name:</label>
                             <div className="lastname-icon">
-                                <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} required />
+                                <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="form-email">
                             <label htmlFor="email">Email:</label>
                             <div className="email-enter">
-                                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+                                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="form-password">
                             <label htmlFor="password">Password:</label>
                             <div className="password-enter">
-                                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+                                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="form-confirm-password">
                             <label htmlFor="confirm-password">Confirm Password:</label>
                             <div className="confirm-password-enter">
-                                <input type="password" id="confirm-password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+                                <input type="password" id="confirm-password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} disabled={isSubmitting} required />
                             </div>
                         </div>
                         <div className="submit-button">
-                            <button type="submit" className="register-button">Register</button>
+                            <button type="submit" className="register-button" disabled={isSubmitting}>Register</button>
                         </div>
                         <div className="login-link">
                             <p>

@@ -1,3 +1,15 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -369,16 +381,14 @@ body {
   font-weight: bold;
 }
 
-/* Increase font size and padding for the SelectButton container */
 .p-selectbutton {
-  font-size: 1rem;        /* larger text */
-  padding: 0.2rem 0;         /* vertical padding */
+  font-size: 1rem;
+  padding: 0.2rem 0;
 }
 
-/* Make each individual button inside larger and wider */
 .p-selectbutton .p-button {
-  padding: 0.55rem 2rem;     /* top/bottom and left/right padding */
-  min-width: 120px;          /* minimum width of each button */
+  padding: 0.55rem 2rem;
+  min-width: 120px;
   font-size: 1.1rem;
   margin: 10px;
   margin-bottom: -15px;
@@ -386,7 +396,161 @@ body {
   border-radius: 190px;
 }
 
-
 .p-selectbutton .p-button.p-highlight {
   font-weight: bold;
 }
+
+.addproduct {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto; /* makes it grow and shrink as needed */
+  min-height: 0;  /* important for flex children to not overflow */
+}
+
+.addproduct-content {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0; /* Helps flex children not overflow in Firefox/Chrome */
+}
+
+.addproduct-content > div {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 1rem;
+}
+
+.addproduct-content-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.addproduct-content-left img {
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.addproduct-content-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.addproduct-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 10px 10px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.addproduct-name-input input {
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: 1px solid black;
+  font-weight: normal;
+}
+
+.addproduct-type-label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.addproduct-model-label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.addproduct-content-center-top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.addproduct-description-label {
+  font-weight: bold;
+}
+
+.addproduct-description-input textarea {
+  margin-top: 25px;
+  background: lightgray;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.addproduct-content-center-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid black;
+}
+.addproduct-address-label {
+  margin-top: 15px;
+  font-weight: bold;
+  align-items: center;
+}
+
+.addproduct-address-input input {
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 0px 5px;
+}
+
+.addproduct-address-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.addproduct-address-buttons button {
+  border: 1px solid black;
+  background: #e3a826;
+  border-radius: 5px;
+  padding: 0px 4px;
+}
+
+.addproduct-address-map {
+  margin-top: 10px;
+  align-self: stretch; /* stretch full width despite parent's center alignment */
+  height: 300px;
+  border: 1px solid black;
+}
+
+.addproduct-content-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+}
+
+
+.addproduct-pricecontrols-label {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 35px;
+}
+
+.addproduct-price-input input {
+  font-weight: normal;
+  border: 1px solid black;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+
