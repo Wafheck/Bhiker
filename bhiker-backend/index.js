@@ -19,6 +19,10 @@ app.use(express.json());
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
+const productsRouter = require('./routes/products');
+app.use('/api/products', productsRouter);
+
+
 // Add these connection event listeners **before** mongoose.connect()
 mongoose.connection.on("connected", () => {
     console.log("Mongoose default connection is open");
