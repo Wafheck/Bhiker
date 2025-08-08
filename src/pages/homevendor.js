@@ -9,6 +9,9 @@ function HomePageVendor() {
     const [user, setUser] = useState(null);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [showAddDropdown, setShowAddDropdown] = useState(false);
+    const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -19,6 +22,49 @@ function HomePageVendor() {
             setUser(storedUser);
         }
     }, [navigate]);
+
+    useEffect(() => {
+        // Only run if there is a logged-in user
+        if (!user) return;
+
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+            alert("Please log in first.");
+            navigate("/login");
+            return;
+        }
+
+        async function fetchListings() {
+            try {
+                // Replace with your API URL
+                const res = await fetch(
+                    `${process.env.REACT_APP_API_URL}/api/products/mine`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+                if (!res.ok) throw new Error("Failed to fetch listings");
+                const data = await res.json();
+                setListings(data.listings);
+                setLoading(false);
+            } catch (err) {
+                console.error("Fetch listings error:", err);
+                if (err.response) {
+                    console.error("Response data:", err.response);
+                    setError(`Error ${err.response.status}: ${err.response.statusText || 'Failed to fetch listings'}`);
+                } else {
+                    setError(err.message);
+                }
+                setLoading(false);
+            }
+        }
+        fetchListings();
+    }, [user, navigate]);
+
 
     const toggleShowDropdown = () => {
         setShowUserDropdown(prev => !prev);
@@ -46,6 +92,22 @@ function HomePageVendor() {
 
     const handleSettings = () => {
         navigate("/VendorSettings");
+    }
+
+    function ListingCard({ listing }) {
+        return (
+            <div className="listing-card">
+                {/* Use your image logic; fallback if missing */}
+                <img src={listing.imageUrl || "https://via.placeholder.com/300x150?text=No+Image"} alt={listing.model} style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 8, marginBottom: 8 }}/>
+                <h3>{listing.name}</h3>
+                <p><b>Type:</b> {listing.type}</p>
+                <p><b>Model:</b> {listing.model}</p>
+                <p><b>License No:</b> {listing.licenseno}</p>
+                <p><b>Price:</b> ₹{listing.price} / {listing.frequency}</p>
+                <p><b>Status:</b> {listing.listStatus}</p>
+                <button onClick={() => navigate(`/listing/${listing._id}`)} style={{marginTop: 8}}>More Info</button>
+            </div>
+        );
     }
 
     return (
@@ -95,7 +157,21 @@ function HomePageVendor() {
                     )}
                 </div>
             </header>
-            <div className="warning">
+            <div className="listings-section">
+                <h2 style={{margin: "1rem 0"}}>Your Listings</h2>
+                {loading ? (
+                    <div>Loading…</div>
+                ) : error ? (
+                    <div style={{ color: "red" }}>{error}</div>
+                ) : listings.length === 0 ? (
+                    <div>No listings found. Click "Add Listing" to create one!</div>
+                ) : (
+                    <div className="listing-grid">
+                        {listings.map(listing => (
+                            <ListingCard key={listing._id} listing={listing} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

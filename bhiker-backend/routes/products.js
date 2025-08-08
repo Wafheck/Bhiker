@@ -23,5 +23,24 @@ router.post(
         }
     }
 );
+router.get(
+    "/mine",
+    authenticateToken,   // checks JWT, sets req.user
+    requireVendor,       // ensures only vendors
+    async (req, res) => {
+        try {
+            // req.user.vendorID is set by JWT (see token generation in your login route)
+            const vendorID = req.user.vendorID;
+            if (!vendorID) {
+                return res.status(403).json({ error: "Missing vendorID in token." });
+            }
+            const listings = await Product.find({ vendorID }).sort({ createdAt: -1 });
+            res.json({ listings });
+        } catch (err) {
+            console.error("❌ [PRODUCTS] Fetch vendor listings failed:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+);
 
 module.exports = router;
