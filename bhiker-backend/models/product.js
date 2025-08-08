@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 
+function makeProductID() {
+    const ts  = Date.now().toString().slice(-8);
+    const rnd = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `PROD-${ts}-${rnd}`;
+}
+
 const productSchema = new mongoose.Schema({
-    productID: { type: String, required: true, unique: true },
+    productID: { type: String, required: true, unique: true, default: makeProductID()},
     vendorID: {type: String, required: true},
     name: { type: String, required: true },
     type: { type: String, required: true },
@@ -15,13 +21,5 @@ const productSchema = new mongoose.Schema({
     listStatus: { type: String, required: true},
 }, { timestamps: true });
 
-productSchema.pre("save", function(next) {
-    if (!this.productID) {
-        const ts = Date.now().toString().slice(-8);
-        const rnd = Math.random().toString(36).substring(2, 6).toUpperCase();
-        this.productID = `VEN-${ts}-${rnd}`
-    }
-    next();
-});
 
 module.exports = mongoose.model("Product", productSchema);
