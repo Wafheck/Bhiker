@@ -43,7 +43,7 @@ function Login() {
                 }
             );
 
-            const { user, token } = response.data.user;
+            const { user, token } = response.data;
 
             authStore.setUser(user);
             localStorage.setItem("user", JSON.stringify(user));

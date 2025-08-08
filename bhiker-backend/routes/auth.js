@@ -170,7 +170,6 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
             email: user.email,
             role: user.role
         };
-
         if (role === 'vendor') {
             responseUser.vendorID = user.vendorID;
         } else {
