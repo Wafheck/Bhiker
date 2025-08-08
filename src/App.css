@@ -587,4 +587,41 @@ body {
   margin-top: 10px;
 }
 
+.listproductven {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  width: 100%;
+  align-items: stretch;
+  min-height: 0;
+  background: #ffffff;
+  height: 100%;
+}
+
+.listproductven-sidebar {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid black;
+  align-items: center;
+  font-weight: bold;
+  width: 16%;
+}
+
+.listproductven-sidebar label {
+  margin-top: 15px;
+}
+
+.listing-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.listing-card {
+  border: 1px black solid;
+  padding: 16px;
+  background: #eeeeee;
+  border-radius: 12px;
+}
+
 

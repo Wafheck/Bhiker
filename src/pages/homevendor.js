@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import userIcon from "../icons/user.png";
 import addIcon from "../icons/add.png";
 import Userlocation from "../components/userlocation";
+import honda_activa from "../vehicles/honda_activa.jpg";
+import tvs_apache from "../vehicles/tvs_apache.jpg";
+import hero_splendor from "../vehicles/hero_splendor.png";
+import bajaj_pulsar from "../vehicles/bajaj_pulsar.jpg";
+import suzuki_access from "../vehicles/suzuki_access.jpg";
+import placeholder from "../vehicles/addlist_placeholder.png"
+
 
 function HomePageVendor() {
     const navigate = useNavigate();
@@ -12,6 +19,15 @@ function HomePageVendor() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [vehicleImage, setVehicleImage] = useState(placeholder)
+    const modelImageMap = {
+        honda_activa: honda_activa,
+        tvs_apache: tvs_apache,
+        hero_splendor: hero_splendor,
+        bajaj_pulsar: bajaj_pulsar,
+        suzuki_access: suzuki_access,
+    };
+
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -95,10 +111,11 @@ function HomePageVendor() {
     }
 
     function ListingCard({ listing }) {
+        const cardImage = modelImageMap[listing.model] || placeholder;
         return (
             <div className="listing-card">
                 {/* Use your image logic; fallback if missing */}
-                <img src={listing.imageUrl || "https://via.placeholder.com/300x150?text=No+Image"} alt={listing.model} style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 8, marginBottom: 8 }}/>
+                <img src={listing.imageUrl || cardImage } alt={listing.model} style={{ width: "100%", height: 120, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }}/>
                 <h3>{listing.name}</h3>
                 <p><b>Type:</b> {listing.type}</p>
                 <p><b>Model:</b> {listing.model}</p>
@@ -111,7 +128,7 @@ function HomePageVendor() {
     }
 
     return (
-        <div>
+        <div className="app">
             <header className="home-header">
                 <div className="home-left">
                     <a onClick={handleHome} className="logo">BHIKER Vendor</a>
@@ -157,21 +174,26 @@ function HomePageVendor() {
                     )}
                 </div>
             </header>
-            <div className="listings-section">
-                <h2 style={{margin: "1rem 0"}}>Your Listings</h2>
-                {loading ? (
-                    <div>Loading…</div>
-                ) : error ? (
-                    <div style={{ color: "red" }}>{error}</div>
-                ) : listings.length === 0 ? (
-                    <div>No listings found. Click "Add Listing" to create one!</div>
-                ) : (
-                    <div className="listing-grid">
-                        {listings.map(listing => (
-                            <ListingCard key={listing._id} listing={listing} />
-                        ))}
-                    </div>
-                )}
+            <div className="listproductven">
+                <div className="listproductven-sidebar">
+                    <label>Sidebar</label>
+                </div>
+                <div className="listings-section">
+                    <h2 style={{margin: "1rem 0", fontWeight: "bold"}}>Your Listings</h2>
+                    {loading ? (
+                        <div>Loading…</div>
+                    ) : error ? (
+                        <div style={{ color: "red" }}>{error}</div>
+                    ) : listings.length === 0 ? (
+                        <div>No listings found. Click "Add Listing" to create one!</div>
+                    ) : (
+                        <div className="listing-grid">
+                            {listings.map(listing => (
+                                <ListingCard key={listing._id} listing={listing} />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
