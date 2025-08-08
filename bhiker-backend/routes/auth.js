@@ -130,16 +130,11 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
         const normalizedEmail = email.toLowerCase();
 
         let userModel;
-
-        if (role === 'user'){
+        if (role === 'user') {
             userModel = User;
-        }
-
-        else if (role === 'vendor'){
+        } else if (role === 'vendor') {
             userModel = Vendor;
-        }
-
-        else{
+        } else {
             return res.status(400).json({ message: "Invalid Login" });
         }
 
@@ -163,21 +158,29 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
 
         res.cookie('authToken', token, {
             httpOnly: true,
-            secure: true, // Required for SameSite=None
-            sameSite: 'none', // Required for cross-origin cookies
+            secure: true,
+            sameSite: 'none',
             maxAge: 3600000, // 1 hour
         });
+
+        // ✅ Fixed response - conditional field access
+        const responseUser = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            role: user.role
+        };
+
+        if (role === 'vendor') {
+            responseUser.vendorID = user.vendorID;
+        } else {
+            responseUser.userID = user.userID;
+        }
 
         res.json({
             message: "Login successful",
             token: token,
-            user: {
-                firstname: user.firstname,
-                lastname:  user.lastname,
-                email:     user.email,
-                role:      user.role,
-                vendorID:  user.vendorID  // now available to frontend
-            }
+            user: responseUser
         });
 
     } catch (err) {
