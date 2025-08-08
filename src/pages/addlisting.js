@@ -117,23 +117,24 @@ function AddListing() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        try {
-            // listStatus must be a boolean or string your backend expects
-            const payload = { ...listData, listStatus: "active" };
+        const payload = { ...listData, listStatus: "active" };
+        console.log("▶ [FRONTEND] Posting payload:", payload);
 
+        try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/products`,
                 payload
             );
-
+            console.log("✅ [FRONTEND] Post response:", response.data);
             alert("Listing posted successfully!");
             navigate("/homevendor");
         } catch (err) {
-            console.error("Post listing failed:", err.response?.data || err.message);
+            console.error("❌ [FRONTEND] Post listing failed:", err.response?.data || err.message);
             alert("Failed to post listing");
             setIsSubmitting(false);
         }
     };
+
 
     const handleChange = (e) => {
         setListData({
