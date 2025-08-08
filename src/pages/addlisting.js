@@ -123,7 +123,12 @@ function AddListing() {
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/products`,
-                payload
+                payload,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }
             );
             console.log("✅ [FRONTEND] Post response:", response.data);
             alert("Listing posted successfully!");
