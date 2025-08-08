@@ -7,7 +7,7 @@ function makeProductID() {
 }
 
 const productSchema = new mongoose.Schema({
-    productID: { type: String, required: true, unique: true, default: makeProductID()},
+    productID: { type: String, required: true, unique: true, default: makeProductID },
     vendorID: {type: String, required: true},
     name: { type: String, required: true },
     type: { type: String, required: true },
