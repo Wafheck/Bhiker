@@ -170,6 +170,7 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
 
         res.json({
             message: "Login successful",
+            token: token,
             user: {
                 firstname: user.firstname,
                 lastname:  user.lastname,

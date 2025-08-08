@@ -43,11 +43,11 @@ function Login() {
                 }
             );
 
-            const user = response.data.user;
+            const { user, token } = response.data.user;
 
             authStore.setUser(user);
-
             localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("authToken", token);
 
             if (user.role === 'vendor') {
                 navigate("/homevendor");
