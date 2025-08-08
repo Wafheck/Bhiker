@@ -368,7 +368,7 @@ function AddListing() {
                                     Set Price [₹]:
                                 </div>
                                 <div className="addproduct-price-input">
-                                    <input type="text" maxLength="4" name="price" disabled={isSubmitting} required />
+                                    <input type="text" maxLength="4" name="price" value={listData.price} onChange={handleChange} disabled={isSubmitting} required />
                                 </div>
                             </div>
                             <div className="addproduct-pricecontrols-select">
