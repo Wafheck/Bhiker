@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const axios = require("axios"); // Add this import
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
