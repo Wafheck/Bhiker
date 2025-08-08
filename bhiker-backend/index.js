@@ -7,6 +7,8 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+axios.defaults.withCredentials = true;
+
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3001' , 'https://www.bhiker.me'],
     credentials: true

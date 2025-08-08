@@ -214,6 +214,7 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
     try {
         const { email, password, role } = req.body;
         const normalizedEmail = email.toLowerCase();
+
         let userModel;
 
         if (role === 'user'){
@@ -234,20 +235,34 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid Credentials" });
 
-        const token = jwt.sign(
-            { userId: user._id, email: user.email, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
+        const tokenPayload = {
+            userId: user._id,
+            email: user.email,
+            role: user.role,
+        };
+
+        if (role === 'vendor') {
+            tokenPayload.vendorID = user.vendorID;
+        }
+
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        res.cookie('authToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000,
+        });
 
         res.json({
-            token,
+            message: "Login successful",
             user: {
                 firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-                role: user.role,
-            },
+                lastname:  user.lastname,
+                email:     user.email,
+                role:      user.role,
+                vendorID:  user.vendorID  // now available to frontend
+            }
         });
 
     } catch (err) {

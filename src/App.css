@@ -387,7 +387,7 @@ body {
 }
 
 .p-selectbutton .p-button {
-  padding: 0.55rem 2rem;
+  padding: 0.55rem 1rem;
   min-width: 120px;
   font-size: 1.1rem;
   margin: 10px;
@@ -403,8 +403,9 @@ body {
 .addproduct {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto; /* makes it grow and shrink as needed */
-  min-height: 0;  /* important for flex children to not overflow */
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #eeeeee;
 }
 
 .addproduct-content {
@@ -431,6 +432,7 @@ body {
   border: 1px solid black;
   padding: 5px;
   border-radius: 15px;
+  background: white;
 }
 
 .addproduct-content-center {
@@ -470,6 +472,19 @@ body {
   font-weight: bold;
 }
 
+.addproduct-licenseno-label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.addproduct-licenseno-input input {
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: 1px solid black;
+  font-weight: normal;
+}
+
 .addproduct-content-center-top {
   display: flex;
   flex-direction: column;
@@ -484,7 +499,7 @@ body {
 
 .addproduct-description-input textarea {
   margin-top: 25px;
-  background: lightgray;
+  background: #ffffff;
   border: 1px solid black;
   padding: 5px;
 }
@@ -535,8 +550,12 @@ body {
   flex-direction: column;
   align-items: center;
   font-weight: bold;
+  flex-grow: 1;
 }
 
+.addproduct-content-right-top {
+  flex-grow: 1;
+}
 
 .addproduct-pricecontrols-label {
   margin-top: 20px;
@@ -551,6 +570,21 @@ body {
   border: 1px solid black;
   padding: 2px 5px;
   border-radius: 5px;
+}
+
+.addproduct-storebuttons {
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  border-top: 1px solid black;
+}
+
+.addproduct-storebuttons button {
+  background: #e3a826;
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 10px;
+  margin-top: 10px;
 }
 
 

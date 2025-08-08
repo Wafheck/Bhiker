@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectButton } from 'primereact/selectbutton';
 import regbg from "../images/login-bg.png";
+import authStore from "../utils/authstore";
 import axios from 'axios';
 
 function Login() {
@@ -33,23 +34,27 @@ function Login() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-                email: formData.email,
-                password: formData.password,
-                role: formData.role
-            });
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/auth/login`,
+                {
+                    email:    formData.email,
+                    password: formData.password,
+                    role:     formData.role
+                }
+            );
 
-            localStorage.setItem("token", response.data.token);
+            const user = response.data.user;
 
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            authStore.setUser(user);
 
-            if (formData.role == 'user'){
+            localStorage.setItem("user", JSON.stringify(user));
+
+            if (user.role === 'vendor') {
+                navigate("/homevendor");
+            } else {
                 navigate("/home");
             }
-            else {
-                navigate("/homevendor");
-            }
-        }  catch(error) {
+        } catch (error) {
             setIsSubmitting(false);
             console.error('Login Failed:', error.response?.data || error.message);
             alert("Login failed: " + (error.response?.data?.message || "Invalid credentials"));

@@ -6,11 +6,14 @@ import 'primeicons/primeicons.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { LocationProvider } from './context/locationcontext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      <LocationProvider>
+          <App />
+      </LocationProvider>
   </React.StrictMode>
 );
 

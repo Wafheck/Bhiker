@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import LocationContext from "../context/locationcontext";
 import 'leaflet/dist/leaflet.css';
 import userIcon from "../icons/user.png";
 import addIcon from "../icons/add.png";
@@ -13,25 +14,55 @@ import hero_splendor from "../vehicles/hero_splendor.png";
 import bajaj_pulsar from "../vehicles/bajaj_pulsar.jpg";
 import suzuki_access from "../vehicles/suzuki_access.jpg";
 import {SelectButton} from "primereact/selectbutton";
+import fixDefaultIcon from "../utils/mapiconfix";
+import axios from "axios";
+import {preventDefault} from "leaflet/src/dom/DomEvent";
 import {list} from "postcss";
+
+
+fixDefaultIcon();
+
+
+function RecenterMap({ position }) {
+    const map = useMap();
+    useEffect(() => {
+        map.setView(position);
+    }, [position, map]);
+    return null;
+}
 
 function AddListing() {
     const navigate = useNavigate();
-
+    const { postcode } = useContext(LocationContext);
     const [user, setUser] = useState(null);
 
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [showAddDropdown, setShowAddDropdown] = useState(false);
 
+    const [ isSubmitting, setIsSubmitting] = useState(false)
+
     const [listData, setListData] = useState({
+        vendorID: "",
         name: "",
         type: "",
         model: "",
+        licenseno: "",
+        price: "",
         frequency: "hourly",
+        pincode: "",
+        desc: "",
+        available: "fullmonth",
+        listStatus: ""
     })
 
     const [vehicleImage, setVehicleImage] = useState(placeholder)
-    const vehicleType = ["Scooter", "Electric Scooter", "Geared Motorcycle", "Non-Geared Motorcycle", "Electric Motorcycle", "Powered Bicycle"]
+    const vehicleType =
+            [{ label: "Scooter", value: "scooter" },
+            { label: "Electric Scooter", value: "electric-scooter" },
+            { label: "Geared Motorcycle", value: "geared-motorcycle" },
+            { label: "Non-Geared Motorcycle", value: "nongeared-motorcycle" },
+            {label: "Electric Motorcycle", value: "electric-motorcycle" },
+            {label: "Powered Bicycle", value: "powered-bicycle" }  ]
     const vehicleModel =
         [{ label: "Honda Activa", value: "honda_activa"},
         { label: "TVS Apache", value: "tvs_apache"},
@@ -47,7 +78,6 @@ function AddListing() {
         suzuki_access: suzuki_access,
     };
 
-    const [pincode, setPincode] = useState('');
     const [position, setPosition] = useState([13.3557, 74.7898]);
 
     const frequencyOptions = [
@@ -57,6 +87,13 @@ function AddListing() {
         { label: 'Monthly', value: 'monthly'},
     ]
 
+    const availabilityOptions = [
+        { label: 'Daily', value: 'daily'},
+        { label: 'Weekdays', value: 'weekdays'},
+        { label: 'Weekends', value: 'weekends'},
+        { label: 'Full Month', value: 'fullmonth'},
+    ]
+
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (!storedUser) {
@@ -64,8 +101,39 @@ function AddListing() {
             navigate("/login");
         } else {
             setUser(storedUser);
+            setListData(ld => ({
+                ...ld,
+                vendorID: storedUser.vendorID  // <-- inject vendorID
+            }));
         }
     }, [navigate]);
+
+    const handleSubmit = async(e) => {
+        e.preventDefault()
+        setIsSubmitting(true)
+    }
+
+    const handlePostListing = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            // listStatus must be a boolean or string your backend expects
+            const payload = { ...listData, listStatus: "active" };
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/products`,
+                payload
+            );
+
+            alert("Listing posted successfully!");
+            navigate("/homevendor");
+        } catch (err) {
+            console.error("Post listing failed:", err.response?.data || err.message);
+            alert("Failed to post listing");
+            setIsSubmitting(false);
+        }
+    };
 
     const handleChange = (e) => {
         setListData({
@@ -91,14 +159,14 @@ function AddListing() {
     };
 
     const geocodePincode = async () => {
-        if (pincode.length !== 6) {
+        if (listData.pincode.length !== 6) {
             alert("Please enter a valid 6-digit pincode");
             return;
         }
 
         try {
             const response = await fetch(
-                `https://nominatim.openstreetmap.org/search?postalcode=${pincode}&country=India&format=json&limit=1`
+                `https://nominatim.openstreetmap.org/search?postalcode=${listData.pincode}&country=India&format=json&limit=1`
             );
             const data = await response.json();
             if (data && data.length > 0) {
@@ -119,7 +187,7 @@ function AddListing() {
     const toggleAddDropdown = () => {
         setShowAddDropdown(prev => !prev);
         setShowUserDropdown(false);
-    }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem("user");
@@ -142,6 +210,10 @@ function AddListing() {
     const handleSettings = () => {
         navigate("/VendorSettings");
     }
+
+    const fetchPincode = () => {
+        setListData({ ...listData, pincode: (postcode || "").toString() });
+    };
 
     return (
         <div className="app">
@@ -190,7 +262,7 @@ function AddListing() {
                     )}
                 </div>
             </header>
-            <div className="addproduct">
+            <div className="addproduct" onSubmit={handleSubmit}>
                 <div className="addproduct-content">
                     <div className="addproduct-content-left">
                         <div className="addproduct-name">
@@ -198,7 +270,7 @@ function AddListing() {
                                 Name
                             </div>
                             <div className="addproduct-name-input">
-                                <input type="name" id="input-name" name="name" value={listData.name} onChange={handleChange} required/>
+                                <input type="name" id="input-name" name="name" value={listData.name} onChange={handleChange} required disabled={isSubmitting}/>
                             </div>
                         </div>
                         <img src={vehicleImage} alt="placeholder" width={512} height={512}/>
@@ -209,14 +281,13 @@ function AddListing() {
                             <Dropdown value={listData.type}
                                       onChange={(e) => handleDropdownType(e)}
                                       options={vehicleType}
-                                      optionLabel={(option) => option}
-                                      optionValue={(option) => option}
                                       placeholder="Select Vehicle Type:"
                                       className="w-full md:w-14rem"
                                       checkmark={true}
                                       highlightOnSelect={false}
                                       style={{color: "red", fontWeight: "normal", border: "1px solid black", padding: "5px",
                                       borderRadius: "15px"}}
+                                      disabled={isSubmitting}
                             />
                         </div>
                         <div className="addproduct-model-label">
@@ -230,7 +301,15 @@ function AddListing() {
                                       className="w-full md:w-14rem"
                                       style={{fontWeight: "normal", border: "1px solid black", padding: "5px",
                                           borderRadius: "15px"}}
+                                      disabled={isSubmitting}
                             />
+                        </div>
+                        <div className="addproduct-licenseno-label">
+                            License Number
+                        </div>
+                        <div className="addproduct-licenseno-input">
+                            <input type="text" id="input-licenseno" maxLength={10} name="licenseno" disabled={isSubmitting}
+                                   value={(listData.licenseno || "").toString().toUpperCase()} onChange={handleChange} required/>
                         </div>
                     </div>
                     <div className="addproduct-content-center">
@@ -239,7 +318,7 @@ function AddListing() {
                                 Description
                             </div>
                             <div className="addproduct-description-input">
-                                <textarea id="feedback" name="user_feedback" rows="12" cols="70"></textarea>
+                                <textarea value={listData.desc} id="feedback" name="desc" disabled={isSubmitting} onChange={handleChange} rows="12" cols="70"></textarea>
                             </div>
                         </div>
                         <div className="addproduct-content-center-bottom">
@@ -251,51 +330,82 @@ function AddListing() {
                                     type="text"
                                     maxLength={6}
                                     pattern="\d{6}"
+                                    name="pincode"
                                     title="Enter a valid 6-digit pincode"
-                                    value={pincode}
-                                    onChange={(e) => setPincode(e.target.value.replace(/\D/, ''))}
+                                    value={listData.pincode}
+                                    onChange={handleChange}
                                     placeholder="Enter 6-digit pincode"
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             <div className="addproduct-address-buttons">
                                 <div className="addproduct-address-fetch">
-                                    <button>
+                                    <button onClick={fetchPincode}  disabled={isSubmitting}>
                                         Fetch
                                     </button>
                                 </div>
                                 <div className="addproduct-address-search">
-                                    <button onClick={geocodePincode}>
+                                    <button onClick={geocodePincode}  disabled={isSubmitting}>
                                         Search
                                     </button>
                                 </div>
                             </div>
                             <div className="addproduct-address-map">
-                                <MapContainer center={position} zoom={13} style={{ height: "298px", width: "100%" }}>
+                                <MapContainer disabled={isSubmitting} center={position} zoom={13} style={{ height: "298px", width: "100%" }}>
                                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                     <Marker position={position} />
+                                    <RecenterMap position={position} />
                                 </MapContainer>
                             </div>
                         </div>
                     </div>
                     <div className="addproduct-content-right">
                         Price Controls
-                        <div className="addproduct-pricecontrols-label">
-                            <div className="addproduct-price-label">
-                                Set Price [₹]:
+                        <div className="addproduct-content-right-top">
+                            <div className="addproduct-pricecontrols-label">
+                                <div className="addproduct-price-label">
+                                    Set Price [₹]:
+                                </div>
+                                <div className="addproduct-price-input">
+                                    <input type="text" maxLength="4" name="price" disabled={isSubmitting} required />
+                                </div>
                             </div>
-                            <div className="addproduct-price-input">
-                                <input type="text" maxLength="4" name="price" required />
+                            <div className="addproduct-pricecontrols-select">
+                                <label>Choose Billing Frequency:</label>
+                                <SelectButton
+                                    style={{marginTop: '12px', marginBottom: '36px'}}
+                                    value={listData.frequency}
+                                    options={frequencyOptions}
+                                    onChange={(e) => setListData({ ...listData, frequency: e.value })}
+                                    allowEmpty={false}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+                            <div className="addproduct-availabilty-select">
+                                <label>Choose Availability:</label>
+                                <SelectButton
+                                    style={{marginTop: '12px', flexGrow: "1"}}
+                                    value={listData.available}
+                                    options={availabilityOptions}
+                                    onChange={(e) => setListData({ ...listData, available: e.value })}
+                                    allowEmpty={false}
+                                    disabled={isSubmitting}
+                                />
                             </div>
                         </div>
-                        <div className="addproduct-pricecontrols-select">
-                            <label>Choose Billing Frequency:</label>
-                            <SelectButton
-                                style={{marginTop: '1rem'}}
-                                value={listData.frequency}
-                                options={frequencyOptions}
-                                onChange={(e) => setListData({ ...listData, frequency: e.value })}
-                                allowEmpty={false}
-                            />
+                        <div className="addproduct-content-right-bottom">
+                            <div className="addproduct-storebuttons">
+                                <div className="addproduct-storebuttons-save">
+                                    <button  disabled={isSubmitting}>
+                                        Save For Later
+                                    </button>
+                                </div>
+                                <div className="addproduct-storebuttons-post">
+                                    <button type="button" onClick={handlePostListing}  disabled={isSubmitting}>
+                                        Post Listing
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
