@@ -163,9 +163,9 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
 
         res.cookie('authToken', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 3600000,
+            secure: true, // Required for SameSite=None
+            sameSite: 'none', // Required for cross-origin cookies
+            maxAge: 3600000, // 1 hour
         });
 
         res.json({

@@ -12,7 +12,9 @@ axios.defaults.withCredentials = true;
 
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3001' , 'https://www.bhiker.me'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
 app.use(express.json());
@@ -21,8 +23,8 @@ app.use(cookieParser());
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
-const productsRouter = require('./routes/products');
-app.use('/api/products', productsRouter);
+const productsRouter = require("./routes/products");
+app.use("/api/products", productsRouter);
 
 
 // Add these connection event listeners **before** mongoose.connect()
