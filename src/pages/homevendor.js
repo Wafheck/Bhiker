@@ -112,16 +112,21 @@ function HomePageVendor() {
 
     function ListingCard({ listing }) {
         const cardImage = modelImageMap[listing.model] || placeholder;
+        const typeClass = listing.type;
+        const statusClass = listing.listStatus;
         return (
             <div className="listing-card">
                 {/* Use your image logic; fallback if missing */}
                 <img src={listing.imageUrl || cardImage } alt={listing.model} style={{ width: "100%", height: 120, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }}/>
-                <h3>{listing.name}</h3>
-                <p><b>Type:</b> {listing.type}</p>
+                <h3 style={{fontWeight: "bold", justifyItems: "center"}}>{listing.name}</h3>
+                <div className="model-button">
+                    <button type="button" className={typeClass}>{listing.type}</button>
+                </div>
                 <p><b>Model:</b> {listing.model}</p>
                 <p><b>License No:</b> {listing.licenseno}</p>
                 <p><b>Price:</b> ₹{listing.price} / {listing.frequency}</p>
-                <p><b>Status:</b> {listing.listStatus}</p>
+                <p><b>Availability:</b> {listing.available}</p>
+                <p className={statusClass}>{listing.listStatus}</p>
                 <button onClick={() => navigate(`/listing/${listing._id}`)} style={{marginTop: 8}}>More Info</button>
             </div>
         );

@@ -624,4 +624,56 @@ body {
   border-radius: 12px;
 }
 
+.listing-card .model-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
+.listing-card .scooter {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkcyan;
+  color: white;
+  border-radius: 8px;
+}
+
+.listing-card .nongeared-motorcycle {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkblue;
+  color: white;
+  border-radius: 8px;
+}
+
+.listing-card .geared-motorcycle {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkred;
+  color: white;
+  border-radius: 8px;
+}
+
+.listing-card .powered-bicycle {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkorange;
+  color: white;
+  border-radius: 8px;
+}
+
+.listing-card .electric-scooter {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkgreen;
+  color: white;
+  border-radius: 8px;
+}
+
+.listing-card .electric-motorcycle {
+  border: 1px black solid;
+  padding: 0px 4px;
+  background: darkolivegreen;
+  color: white;
+  border-radius: 8px;
+}
