@@ -19,7 +19,6 @@ function HomePageVendor() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [vehicleImage, setVehicleImage] = useState(placeholder)
     const modelImageMap = {
         honda_activa: honda_activa,
         tvs_apache: tvs_apache,
@@ -127,7 +126,9 @@ function HomePageVendor() {
                 <p><b>Price:</b> ₹{listing.price} / {listing.frequency}</p>
                 <p><b>Availability:</b> {listing.available}</p>
                 <p className={statusClass}>{listing.listStatus}</p>
-                <button onClick={() => navigate(`/listing/${listing._id}`)} style={{marginTop: 8}}>More Info</button>
+                <button className="view-button" onClick={() => navigate("/EditListing", { state: { productKey: listing.productID } })} style={{marginTop: 8}}>
+                    View Listing
+                </button>
             </div>
         );
     }

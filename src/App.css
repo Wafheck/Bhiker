@@ -677,3 +677,10 @@ body {
   color: white;
   border-radius: 8px;
 }
+
+.listing-card .view-button {
+  background: #e3a826;
+  border: 1px black solid;
+  padding: 0px 5px;
+  border-radius: 8px;
+}

@@ -9,6 +9,7 @@ import HomePage from './pages/home.js';
 import HomePageVendor from './pages/homevendor.js';
 import Addlisting from "./pages/addlisting.js";
 import VendorSettings from "./pages/vendorsettings.js";
+import EditListing from "./pages/editlisting"
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="homevendor" element={<HomePageVendor />} />
                 <Route path="addlisting" element={<Addlisting />} />
                 <Route path="vendorsettings" element={<VendorSettings />} />
+                <Route path="editlisting" element={<EditListing />} />
             </Routes>
         </BrowserRouter>
     );
