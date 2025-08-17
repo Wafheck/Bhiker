@@ -23,6 +23,27 @@ router.post(
         }
     }
 );
+
+router.get(
+    "/:productID",
+    authenticateToken,
+    requireVendor,
+    async (req, res) => {
+        try {
+            const { productID } = req.params;
+            const product = await Product.findOne({ productID });
+            if (!product) {
+                return res.status(404).json({ error: "Product not found." });
+            }
+            res.json(product);
+        } catch (err) {
+            console.error("❌ [PRODUCTS] Error fetching product:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+);
+
+
 router.get(
     "/mine",
     authenticateToken,   // checks JWT, sets req.user
