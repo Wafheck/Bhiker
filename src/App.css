@@ -27,6 +27,11 @@ body {
   color: #000;
 }
 
+button:hover {
+  filter: brightness(80%);
+}
+
+
 .home-header {
   display: flex;
   align-items: center;
@@ -684,3 +689,9 @@ body {
   padding: 0px 5px;
   border-radius: 8px;
 }
+
+.editproduct-deletebutton :hover {
+  background: darkred;
+  color: white;
+}
+

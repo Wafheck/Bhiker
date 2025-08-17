@@ -252,7 +252,20 @@ function EditListing() {
                     ...product,
                 }));
                 setVehicleImage(modelImageMap[product.model] || placeholder);
-                setIsSubmitting(false)
+                setIsSubmitting(false);
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/search?postalcode=${product.pincode}&country=India&format=json&limit=1`
+                    );
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        setPosition([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                    } else {
+                        alert("Pincode not found");
+                    }
+                } catch (error) {
+                    alert("Failed to fetch location");
+                }
             } catch (err) {
                 console.error("Fetch listings error:", err);
                 if (err.response) {
@@ -263,22 +276,37 @@ function EditListing() {
                 }
                 setIsSubmitting(false);
             }
-            try {
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/search?postalcode=${listData.pincode}&country=India&format=json&limit=1`
-                );
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    setPosition([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                } else {
-                    alert("Pincode not found");
-                }
-            } catch (error) {
-                alert("Failed to fetch location");
-            }
+
         }
         fetchListings();
     }, [user, productKey, navigate]);
+
+    const handleRemoval = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        const token = localStorage.getItem("authToken");
+        const prodID = listData.productID;
+        console.log("▶ [FRONTEND] deleting payload:", prodID);
+
+        try {
+            const response = await axios.delete(  // ✅ Use DELETE method
+                `${process.env.REACT_APP_API_URL}/api/products/${prodID}`,
+                {  // ✅ Correct config structure
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+            console.log("✅ [FRONTEND] Delete response:", response.data);
+            alert("Listing deleted successfully!");
+            navigate("/homevendor");
+        } catch (err) {
+            console.error("❌ [FRONTEND] Delete listing failed:", err.response?.data || err.message);
+            alert("Failed to delete listing");
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <div className="app">
@@ -286,7 +314,7 @@ function EditListing() {
                 <div className="home-left">
                     <a onClick={handleHome} className="logo">BHIKER Vendor</a>
                     <span className="home-decor1" />
-                    <span className="home-decor2">Add Listing</span>
+                    <span className="home-decor2">Edit Listing</span>
                 </div>
 
                 <div className="home-center">
@@ -467,7 +495,12 @@ function EditListing() {
                                 </div>
                                 <div className="addproduct-storebuttons-post">
                                     <button type="button" onClick={handlePostListing}  disabled={isSubmitting}>
-                                        Post Listing
+                                        Edit Listing
+                                    </button>
+                                </div>
+                                <div className="editproduct-deletebutton">
+                                    <button type="button" onClick={handleRemoval} disabled={isSubmitting}>
+                                        Delete Listing
                                     </button>
                                 </div>
                             </div>

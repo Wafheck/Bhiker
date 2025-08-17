@@ -63,4 +63,22 @@ router.get(
     }
 );
 
+router.delete(
+    "/:productID",
+    authenticateToken,
+    requireVendor,
+    async (req, res) => {
+        try {
+            const { productID } = req.params;
+            const deletedItem = await Product.deleteOne({ productID });
+            if (deletedItem.deletedCount === 0) {
+                return res.status(404).json({message: "Item not found "});
+            }
+            res.status(200).json({message: "Item deleted successfully", item: deletedItem})
+        } catch (error) {
+            res.status(500).json({ message: "Error deleting item", error: error.message });
+        }
+    }
+);
+
 module.exports = router;
