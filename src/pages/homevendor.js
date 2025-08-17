@@ -9,6 +9,7 @@ import hero_splendor from "../vehicles/hero_splendor.png";
 import bajaj_pulsar from "../vehicles/bajaj_pulsar.jpg";
 import suzuki_access from "../vehicles/suzuki_access.jpg";
 import placeholder from "../vehicles/addlist_placeholder.png"
+import Loadgif from "../images/loading.gif";
 
 
 function HomePageVendor() {
@@ -187,7 +188,7 @@ function HomePageVendor() {
                 <div className="listings-section">
                     <h2 style={{margin: "1rem 0", fontWeight: "bold"}}>Your Listings</h2>
                     {loading ? (
-                        <div>Loading…</div>
+                        <img src={Loadgif}/>
                     ) : error ? (
                         <div style={{ color: "red" }}>{error}</div>
                     ) : listings.length === 0 ? (

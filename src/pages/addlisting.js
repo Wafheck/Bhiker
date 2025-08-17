@@ -109,8 +109,30 @@ function AddListing() {
     }, [navigate]);
 
     const handleSubmit = async(e) => {
-        e.preventDefault()
-        setIsSubmitting(true)
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const payload = { ...listData, listStatus: "saved" };
+        console.log("▶ [FRONTEND] Posting payload:", payload);
+
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/products`,
+                payload,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                }
+            );
+            console.log("✅ [FRONTEND] Post response:", response.data);
+            alert("Listing posted successfully!");
+            navigate("/homevendor");
+        } catch (err) {
+            console.error("❌ [FRONTEND] Post listing failed:", err.response?.data || err.message);
+            alert("Failed to post listing");
+            setIsSubmitting(false);
+        }
     }
 
     const handlePostListing = async (e) => {
@@ -402,7 +424,7 @@ function AddListing() {
                         <div className="addproduct-content-right-bottom">
                             <div className="addproduct-storebuttons">
                                 <div className="addproduct-storebuttons-save">
-                                    <button  disabled={isSubmitting}>
+                                    <button type="button" onClick={handleSubmit}  disabled={isSubmitting}>
                                         Save For Later
                                     </button>
                                 </div>
