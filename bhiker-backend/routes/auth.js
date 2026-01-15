@@ -123,7 +123,7 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
 
             // Send email using Resend API
             const { data, error } = await resend.emails.send({
-                from: "Bhiker <onboarding@resend.dev>", // Use Resend's default sender (verify your domain later for custom sender)
+                from: "Bhiker <support@bhiker.me>",
                 to: [normalizedEmail],
                 subject: subject,
                 html: `
