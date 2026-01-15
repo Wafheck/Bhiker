@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-transporter.verify(function(error, success) {
+transporter.verify(function (error, success) {
     if (error) {
         console.error("SMTP connection error:", error);
     } else {
@@ -115,7 +115,75 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
         await user.save();
         console.log("✅ User saved successfully with vendorID:", user.vendorID);
 
-        // Send email (omitted logs for brevity)...
+        // Send welcome email
+        try {
+            // Determine subject and content based on role
+            const isVendor = role === 'vendor';
+            const subject = isVendor
+                ? `Your Bhiker Vendor Account has been successfully created!`
+                : `Welcome to Bhiker, ${firstname} ${lastname}!`;
+
+            const welcomeMessage = isVendor
+                ? `Welcome to the <span style="color: #D4A017; font-weight: bold;">BHIKER</span> Vendor! We're excited to have you on board.`
+                : `Welcome to the <span style="color: #D4A017; font-weight: bold;">BHIKER</span> family! We're excited to have you on board.`;
+
+            const accountMessage = isVendor
+                ? `Your vendor account has been successfully created, and you're now ready to explore all the great features we offer.`
+                : `Your account has been successfully created, and you're now ready to explore all the great features we offer.`;
+
+            const mailOptions = {
+                from: `"Bhiker" <${process.env.EMAIL_USER}>`,
+                to: normalizedEmail,
+                subject: subject,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+                        <!-- Logo -->
+                        <div style="margin-bottom: 30px;">
+                            <span style="font-size: 28px; font-weight: bold; color: #D4A017; border-left: 4px solid #D4A017; padding-left: 10px;">BHIKER</span>
+                        </div>
+                        
+                        <!-- Greeting -->
+                        <p style="font-size: 16px; margin-bottom: 20px;">Hello, ${firstname} ${lastname}!</p>
+                        
+                        <!-- Welcome message -->
+                        <p style="font-size: 15px; margin-bottom: 15px;">${welcomeMessage}</p>
+                        
+                        <!-- Account info -->
+                        <p style="font-size: 15px; margin-bottom: 20px; line-height: 1.6;">
+                            ${accountMessage} <span style="color: #D4A017; font-weight: bold;">BHIKER</span> is currently in its pre-alpha stage, we appreciate your usage and look forward to receiving valuable feedback and suggestions.
+                        </p>
+                        
+                        <!-- CTA Button -->
+                        <div style="margin: 25px 0;">
+                            <a href="https://www.bhiker.me" 
+                               style="background-color: #D4A017; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; display: inline-block;">
+                                Open BHIKER
+                            </a>
+                        </div>
+                        
+                        <!-- Support message -->
+                        <p style="font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                            If you have any questions or would like to provide feedback, our team is just an email away at 
+                            <a href="mailto:support@bhiker.me" style="color: #333;">support@bhiker.me</a>. 
+                            We're here to assist you every step of the way!
+                        </p>
+                        
+                        <!-- Signature -->
+                        <p style="font-size: 14px; margin-top: 30px;">
+                            Best regards,<br>
+                            <a href="https://www.bhiker.me" style="color: #1a73e8; text-decoration: none;">Wafheck</a>
+                        </p>
+                    </div>
+                `
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log("✅ Welcome email sent to:", normalizedEmail);
+        } catch (emailErr) {
+            console.error("❌ Failed to send welcome email:", emailErr.message);
+            // Don't fail registration if email fails - just log it
+        }
+
         res.status(201).json({ message: "User registered and welcome email sent", vendorID: user.vendorID });
     } catch (err) {
         console.error("❌ Registration error:", err);
