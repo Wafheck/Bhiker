@@ -17,8 +17,9 @@
 .env.development.local
 .env.test.local
 .env.production.local
-+.env
-+bhiker-backend/.env
+.env
+*.env
+bhiker-backend/.env
 
 
 npm-debug.log*
