@@ -12,20 +12,22 @@ const router = express.Router();
 
 const transporter = nodemailer.createTransport({
     host: "smtp.zoho.in",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // Use TLS (STARTTLS) instead of SSL
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    debug: true, // Enable debug output
-    logger: true  // Log to console
+    requireTLS: true, // Require TLS upgrade
+    connectionTimeout: 30000, // 30 second timeout
+    debug: true,
+    logger: true
 });
 
 // Log email config at startup (hide password)
 console.log("📧 Email config:", {
     host: "smtp.zoho.in",
-    port: 465,
+    port: 587,
     user: process.env.EMAIL_USER || "NOT SET!",
     passConfigured: process.env.EMAIL_PASS ? "YES" : "NOT SET!"
 });
