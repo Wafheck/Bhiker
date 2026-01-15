@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const User = require("../models/user");
 const Vendor = require("../models/vendor");
 const { body, validationResult } = require("express-validator");
@@ -10,35 +10,12 @@ const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.zoho.in",
-    port: 587,
-    secure: false, // Use TLS (STARTTLS) instead of SSL
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    requireTLS: true, // Require TLS upgrade
-    connectionTimeout: 30000, // 30 second timeout
-    debug: true,
-    logger: true
-});
+// Initialize Resend with API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Log email config at startup (hide password)
-console.log("📧 Email config:", {
-    host: "smtp.zoho.in",
-    port: 587,
-    user: process.env.EMAIL_USER || "NOT SET!",
-    passConfigured: process.env.EMAIL_PASS ? "YES" : "NOT SET!"
-});
-
-transporter.verify(function (error, success) {
-    if (error) {
-        console.error("❌ SMTP connection error:", error.message);
-        console.error("Full error:", JSON.stringify(error, null, 2));
-    } else {
-        console.log("✅ SMTP server is ready to take messages");
-    }
+// Log email config at startup
+console.log("📧 Email config (Resend):", {
+    apiKeyConfigured: process.env.RESEND_API_KEY ? "YES" : "NOT SET!"
 });
 
 const validateRegistration = [
@@ -144,9 +121,10 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
                 ? `Your vendor account has been successfully created, and you're now ready to explore all the great features we offer.`
                 : `Your account has been successfully created, and you're now ready to explore all the great features we offer.`;
 
-            const mailOptions = {
-                from: `"Bhiker" <${process.env.EMAIL_USER}>`,
-                to: normalizedEmail,
+            // Send email using Resend API
+            const { data, error } = await resend.emails.send({
+                from: "Bhiker <onboarding@resend.dev>", // Use Resend's default sender (verify your domain later for custom sender)
+                to: [normalizedEmail],
                 subject: subject,
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
@@ -188,10 +166,13 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
                         </p>
                     </div>
                 `
-            };
+            });
 
-            await transporter.sendMail(mailOptions);
-            console.log("✅ Welcome email sent to:", normalizedEmail);
+            if (error) {
+                console.error("❌ Resend error:", error);
+            } else {
+                console.log("✅ Welcome email sent to:", normalizedEmail, "ID:", data.id);
+            }
         } catch (emailErr) {
             console.error("❌ Failed to send welcome email:", emailErr.message);
             // Don't fail registration if email fails - just log it
