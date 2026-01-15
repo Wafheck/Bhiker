@@ -17,14 +17,25 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    debug: true, // Enable debug output
+    logger: true  // Log to console
+});
+
+// Log email config at startup (hide password)
+console.log("📧 Email config:", {
+    host: "smtp.zoho.in",
+    port: 465,
+    user: process.env.EMAIL_USER || "NOT SET!",
+    passConfigured: process.env.EMAIL_PASS ? "YES" : "NOT SET!"
 });
 
 transporter.verify(function (error, success) {
     if (error) {
-        console.error("SMTP connection error:", error);
+        console.error("❌ SMTP connection error:", error.message);
+        console.error("Full error:", JSON.stringify(error, null, 2));
     } else {
-        console.log("SMTP server is ready to take messages");
+        console.log("✅ SMTP server is ready to take messages");
     }
 });
 
@@ -171,7 +182,7 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
                         <!-- Signature -->
                         <p style="font-size: 14px; margin-top: 30px;">
                             Best regards,<br>
-                            <a href="https://www.bhiker.me" style="color: #1a73e8; text-decoration: none;">Wafheck</a>
+                            <a href="https://www.github.com/wafheck" style="color: #1a73e8; text-decoration: none;">Wafheck</a>
                         </p>
                     </div>
                 `
