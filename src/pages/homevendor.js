@@ -20,6 +20,9 @@ function HomePageVendor() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [typeFilters, setTypeFilters] = useState([]);
+    const [statusFilters, setStatusFilters] = useState([]);
     const modelImageMap = {
         honda_activa: honda_activa,
         tvs_apache: tvs_apache,
@@ -134,6 +137,50 @@ function HomePageVendor() {
         );
     }
 
+    // Filter toggle functions
+    const toggleTypeFilter = (type) => {
+        setTypeFilters(prev =>
+            prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+        );
+    };
+
+    const toggleStatusFilter = (status) => {
+        setStatusFilters(prev =>
+            prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+        );
+    };
+
+    // Filtered listings
+    const filteredListings = listings.filter(listing => {
+        const matchesSearch = !searchTerm ||
+            listing.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            listing.model?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            listing.licenseno?.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesType = typeFilters.length === 0 || typeFilters.includes(listing.type);
+        const matchesStatus = statusFilters.length === 0 || statusFilters.includes(listing.listStatus);
+
+        return matchesSearch && matchesType && matchesStatus;
+    });
+
+    // Vehicle types for filter
+    const vehicleTypes = [
+        { value: "scooter", label: "Scooter" },
+        { value: "geared-motorcycle", label: "Geared Motorcycle" },
+        { value: "nongeared-motorcycle", label: "Non-geared Motorcycle" },
+        { value: "powered-bicycle", label: "Powered Bicycle" },
+        { value: "electric-scooter", label: "Electric Scooter" },
+        { value: "electric-motorcycle", label: "Electric Motorcycle" }
+    ];
+
+    // Status options for filter
+    const statusOptions = [
+        { value: "active", label: "Listed" },
+        { value: "saved", label: "Unlisted" },
+        { value: "pending", label: "Pending" },
+        { value: "booked", label: "Booked" }
+    ];
+
     return (
         <div className="app">
             <header className="home-header">
@@ -183,19 +230,59 @@ function HomePageVendor() {
             </header>
             <div className="listproductven">
                 <div className="listproductven-sidebar">
-                    <label>Sidebar</label>
+                    <label>Filters</label>
+
+                    {/* Search */}
+                    <input
+                        type="text"
+                        className="sidebar-search"
+                        placeholder="Search listings..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+
+                    {/* Type Filters */}
+                    <div className="sidebar-section">
+                        <h4>Vehicle Type</h4>
+                        {vehicleTypes.map(type => (
+                            <label key={type.value} className="sidebar-checkbox">
+                                <input
+                                    type="checkbox"
+                                    checked={typeFilters.includes(type.value)}
+                                    onChange={() => toggleTypeFilter(type.value)}
+                                />
+                                <span>{type.label}</span>
+                                <span className={`type-tag ${type.value}`}></span>
+                            </label>
+                        ))}
+                    </div>
+
+                    {/* Status Filters */}
+                    <div className="sidebar-section">
+                        <h4>Availability Status</h4>
+                        {statusOptions.map(status => (
+                            <label key={status.value} className="sidebar-checkbox">
+                                <input
+                                    type="checkbox"
+                                    checked={statusFilters.includes(status.value)}
+                                    onChange={() => toggleStatusFilter(status.value)}
+                                />
+                                <span>{status.label}</span>
+                            </label>
+                        ))}
+                    </div>
                 </div>
                 <div className="listings-section">
-                    <h2 style={{ margin: "1rem 0", fontWeight: "bold" }}>Your Listings</h2>
+                    <h2 style={{ margin: "1rem 0", fontWeight: "bold" }}>Your Listings ({filteredListings.length})</h2>
                     {loading ? (
-                        <img src={Loadgif} />
+                        <img src={Loadgif} alt="Loading..." />
                     ) : error ? (
                         <div style={{ color: "red" }}>{error}</div>
-                    ) : listings.length === 0 ? (
-                        <div>No listings found. Click "Add Listing" to create one!</div>
+                    ) : filteredListings.length === 0 ? (
+                        <div>No listings found matching your filters.</div>
                     ) : (
                         <div className="listing-grid">
-                            {listings.map(listing => (
+                            {filteredListings.map(listing => (
                                 <ListingCard key={listing._id} listing={listing} />
                             ))}
                         </div>
