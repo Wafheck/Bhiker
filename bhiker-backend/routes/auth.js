@@ -130,7 +130,7 @@ router.post("/register", validateRegistration, checkValidation, async (req, res)
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
                         <!-- Logo -->
                         <div style="margin-bottom: 30px;">
-                            <img src="https://i.ibb.co/bMNV3yQm/bhiker-logo.png" alt="BHIKER" style="height: 40px;" />
+                            <span style="display: inline-block; background-color: #D4A017; color: #000; font-family: Georgia, 'Times New Roman', serif; font-size: 24px; font-weight: bold; letter-spacing: 6px; padding: 12px 20px;">BHIKER</span>
                         </div>
                         
                         <!-- Greeting -->
