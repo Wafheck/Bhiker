@@ -120,7 +120,7 @@ function HomePageVendor() {
         return (
             <div className="listing-card">
                 {/* Use your image logic; fallback if missing */}
-                <img src={listing.imageUrl || cardImage} alt={listing.model} style={{ width: "100%", height: 120, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }} />
+                <img src={listing.imageUrl || cardImage} alt={listing.model} style={{ width: "100%", height: 160, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }} />
                 <h3 style={{ fontWeight: "bold", justifyItems: "center" }}>{listing.name}</h3>
                 <div className="model-button">
                     <button type="button" className={typeClass}>{listing.type}</button>
@@ -251,8 +251,7 @@ function HomePageVendor() {
                                     checked={typeFilters.includes(type.value)}
                                     onChange={() => toggleTypeFilter(type.value)}
                                 />
-                                <span>{type.label}</span>
-                                <span className={`type-tag ${type.value}`}></span>
+                                <span className={`type-tag ${type.value}`}>{type.label}</span>
                             </label>
                         ))}
                     </div>
