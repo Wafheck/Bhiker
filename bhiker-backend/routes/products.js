@@ -72,11 +72,44 @@ router.delete(
             const { productID } = req.params;
             const deletedItem = await Product.deleteOne({ productID });
             if (deletedItem.deletedCount === 0) {
-                return res.status(404).json({message: "Item not found "});
+                return res.status(404).json({ message: "Item not found " });
             }
-            res.status(200).json({message: "Item deleted successfully", item: deletedItem})
+            res.status(200).json({ message: "Item deleted successfully", item: deletedItem })
         } catch (error) {
             res.status(500).json({ message: "Error deleting item", error: error.message });
+        }
+    }
+);
+
+router.put(
+    "/:productID",
+    authenticateToken,
+    requireVendor,
+    async (req, res) => {
+        try {
+            const { productID } = req.params;
+            const vendorID = req.user.vendorID;
+
+            // Find the product and verify ownership
+            const product = await Product.findOne({ productID });
+            if (!product) {
+                return res.status(404).json({ error: "Product not found." });
+            }
+            if (product.vendorID !== vendorID) {
+                return res.status(403).json({ error: "You can only edit your own listings." });
+            }
+
+            // Update the product
+            const updatedProduct = await Product.findOneAndUpdate(
+                { productID },
+                { $set: req.body },
+                { new: true, runValidators: true }
+            );
+
+            res.json({ message: "Product updated successfully", product: updatedProduct });
+        } catch (err) {
+            console.error("❌ [PRODUCTS] Error updating product:", err);
+            res.status(500).json({ error: err.message });
         }
     }
 );

@@ -13,11 +13,9 @@ import tvs_apache from "../vehicles/tvs_apache.jpg";
 import hero_splendor from "../vehicles/hero_splendor.png";
 import bajaj_pulsar from "../vehicles/bajaj_pulsar.jpg";
 import suzuki_access from "../vehicles/suzuki_access.jpg";
-import {SelectButton} from "primereact/selectbutton";
+import { SelectButton } from "primereact/selectbutton";
 import fixDefaultIcon from "../utils/mapiconfix";
 import axios from "axios";
-import {preventDefault} from "leaflet/src/dom/DomEvent";
-import {list} from "postcss";
 
 
 fixDefaultIcon();
@@ -39,7 +37,7 @@ function AddListing() {
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [showAddDropdown, setShowAddDropdown] = useState(false);
 
-    const [ isSubmitting, setIsSubmitting] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const [listData, setListData] = useState({
         vendorID: "",
@@ -57,18 +55,18 @@ function AddListing() {
 
     const [vehicleImage, setVehicleImage] = useState(placeholder)
     const vehicleType =
-            [{ label: "Scooter", value: "scooter" },
-            { label: "Electric Scooter", value: "electric-scooter" },
-            { label: "Geared Motorcycle", value: "geared-motorcycle" },
-            { label: "Non-Geared Motorcycle", value: "nongeared-motorcycle" },
-            {label: "Electric Motorcycle", value: "electric-motorcycle" },
-            {label: "Powered Bicycle", value: "powered-bicycle" }  ]
+        [{ label: "Scooter", value: "scooter" },
+        { label: "Electric Scooter", value: "electric-scooter" },
+        { label: "Geared Motorcycle", value: "geared-motorcycle" },
+        { label: "Non-Geared Motorcycle", value: "nongeared-motorcycle" },
+        { label: "Electric Motorcycle", value: "electric-motorcycle" },
+        { label: "Powered Bicycle", value: "powered-bicycle" }]
     const vehicleModel =
-        [{ label: "Honda Activa", value: "honda_activa"},
-        { label: "TVS Apache", value: "tvs_apache"},
-        { label: "Bajaj Pulsar", value: "bajaj_pulsar"},
-        { label: "Hero Splendor", value: "hero_splendor"},
-        { label: "Suzuki Access", value: "suzuki_access"}]
+        [{ label: "Honda Activa", value: "honda_activa" },
+        { label: "TVS Apache", value: "tvs_apache" },
+        { label: "Bajaj Pulsar", value: "bajaj_pulsar" },
+        { label: "Hero Splendor", value: "hero_splendor" },
+        { label: "Suzuki Access", value: "suzuki_access" }]
 
     const modelImageMap = {
         honda_activa: honda_activa,
@@ -83,15 +81,15 @@ function AddListing() {
     const frequencyOptions = [
         { label: 'Hourly', value: 'hourly' },
         { label: 'Daily', value: 'daily' },
-        { label: 'Weekly', value: 'weekly'},
-        { label: 'Monthly', value: 'monthly'},
+        { label: 'Weekly', value: 'weekly' },
+        { label: 'Monthly', value: 'monthly' },
     ]
 
     const availabilityOptions = [
-        { label: 'Daily', value: 'daily'},
-        { label: 'Weekdays', value: 'weekdays'},
-        { label: 'Weekends', value: 'weekends'},
-        { label: 'Full Month', value: 'fullmonth'},
+        { label: 'Daily', value: 'daily' },
+        { label: 'Weekdays', value: 'weekdays' },
+        { label: 'Weekends', value: 'weekends' },
+        { label: 'Full Month', value: 'fullmonth' },
     ]
 
     useEffect(() => {
@@ -108,7 +106,7 @@ function AddListing() {
         }
     }, [navigate]);
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
@@ -166,7 +164,7 @@ function AddListing() {
     const handleChange = (e) => {
         setListData({
             ...listData,
-            [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         });
     }
 
@@ -219,7 +217,7 @@ function AddListing() {
 
     const handleLogout = () => {
         localStorage.removeItem("user");
-        alert("Attempt to logout");
+        localStorage.removeItem("authToken");
         navigate("/landingpage");
     }
 
@@ -258,8 +256,8 @@ function AddListing() {
 
                 <div className="home-right">
                     <img src={addIcon} alt="add icon" width={32} height={32}
-                         style={{cursor: "pointer", borderRadius: "50%"}}
-                         onClick={toggleAddDropdown}
+                        style={{ cursor: "pointer", borderRadius: "50%" }}
+                        onClick={toggleAddDropdown}
                     />
                     {showAddDropdown && (
                         <div className="addmenu-drop">
@@ -275,8 +273,8 @@ function AddListing() {
                         </div>
                     )}
                     <img src={userIcon} alt="user icon" width={32} height={32}
-                         style={{cursor: "pointer", borderRadius: "50%"}}
-                         onClick={toggleShowDropdown}
+                        style={{ cursor: "pointer", borderRadius: "50%" }}
+                        onClick={toggleShowDropdown}
                     />
                     {showUserDropdown && (
                         <div className="usermenu-drop">
@@ -298,24 +296,26 @@ function AddListing() {
                                 Name
                             </div>
                             <div className="addproduct-name-input">
-                                <input type="name" id="input-name" name="name" value={listData.name} onChange={handleChange} required disabled={isSubmitting}/>
+                                <input type="name" id="input-name" name="name" value={listData.name} onChange={handleChange} required disabled={isSubmitting} />
                             </div>
                         </div>
-                        <img src={vehicleImage} alt="placeholder" width={512} height={512}/>
+                        <img src={vehicleImage} alt="placeholder" width={512} height={512} />
                         <div className="addproduct-type-label">
                             Type
                         </div>
                         <div className="addproduct-type">
                             <Dropdown value={listData.type}
-                                      onChange={(e) => handleDropdownType(e)}
-                                      options={vehicleType}
-                                      placeholder="Select Vehicle Type:"
-                                      className="w-full md:w-14rem"
-                                      checkmark={true}
-                                      highlightOnSelect={false}
-                                      style={{color: "red", fontWeight: "normal", border: "1px solid black", padding: "5px",
-                                      borderRadius: "15px"}}
-                                      disabled={isSubmitting}
+                                onChange={(e) => handleDropdownType(e)}
+                                options={vehicleType}
+                                placeholder="Select Vehicle Type:"
+                                className="w-full md:w-14rem"
+                                checkmark={true}
+                                highlightOnSelect={false}
+                                style={{
+                                    color: "red", fontWeight: "normal", border: "1px solid black", padding: "5px",
+                                    borderRadius: "15px"
+                                }}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="addproduct-model-label">
@@ -323,13 +323,15 @@ function AddListing() {
                         </div>
                         <div className="addproduct-model">
                             <Dropdown value={listData.model}
-                                      onChange={(e) => handleDropdownModel(e)}
-                                      options={vehicleModel}
-                                      editable placeholder="Select Vehicle Model:"
-                                      className="w-full md:w-14rem"
-                                      style={{fontWeight: "normal", border: "1px solid black", padding: "5px",
-                                          borderRadius: "15px"}}
-                                      disabled={isSubmitting}
+                                onChange={(e) => handleDropdownModel(e)}
+                                options={vehicleModel}
+                                editable placeholder="Select Vehicle Model:"
+                                className="w-full md:w-14rem"
+                                style={{
+                                    fontWeight: "normal", border: "1px solid black", padding: "5px",
+                                    borderRadius: "15px"
+                                }}
+                                disabled={isSubmitting}
                             />
                         </div>
                         <div className="addproduct-licenseno-label">
@@ -337,7 +339,7 @@ function AddListing() {
                         </div>
                         <div className="addproduct-licenseno-input">
                             <input type="text" id="input-licenseno" maxLength={10} name="licenseno" disabled={isSubmitting}
-                                   value={(listData.licenseno || "").toString().toUpperCase()} onChange={handleChange} required/>
+                                value={(listData.licenseno || "").toString().toUpperCase()} onChange={handleChange} required />
                         </div>
                     </div>
                     <div className="addproduct-content-center">
@@ -368,12 +370,12 @@ function AddListing() {
                             </div>
                             <div className="addproduct-address-buttons">
                                 <div className="addproduct-address-fetch">
-                                    <button onClick={fetchPincode}  disabled={isSubmitting}>
+                                    <button onClick={fetchPincode} disabled={isSubmitting}>
                                         Fetch
                                     </button>
                                 </div>
                                 <div className="addproduct-address-search">
-                                    <button onClick={geocodePincode}  disabled={isSubmitting}>
+                                    <button onClick={geocodePincode} disabled={isSubmitting}>
                                         Search
                                     </button>
                                 </div>
@@ -401,7 +403,7 @@ function AddListing() {
                             <div className="addproduct-pricecontrols-select">
                                 <label>Choose Billing Frequency:</label>
                                 <SelectButton
-                                    style={{marginTop: '12px', marginBottom: '36px'}}
+                                    style={{ marginTop: '12px', marginBottom: '36px' }}
                                     value={listData.frequency}
                                     options={frequencyOptions}
                                     onChange={(e) => setListData({ ...listData, frequency: e.value })}
@@ -412,7 +414,7 @@ function AddListing() {
                             <div className="addproduct-availabilty-select">
                                 <label>Choose Availability:</label>
                                 <SelectButton
-                                    style={{marginTop: '12px', flexGrow: "1"}}
+                                    style={{ marginTop: '12px', flexGrow: "1" }}
                                     value={listData.available}
                                     options={availabilityOptions}
                                     onChange={(e) => setListData({ ...listData, available: e.value })}
@@ -424,12 +426,12 @@ function AddListing() {
                         <div className="addproduct-content-right-bottom">
                             <div className="addproduct-storebuttons">
                                 <div className="addproduct-storebuttons-save">
-                                    <button type="button" onClick={handleSubmit}  disabled={isSubmitting}>
+                                    <button type="button" onClick={handleSubmit} disabled={isSubmitting}>
                                         Save For Later
                                     </button>
                                 </div>
                                 <div className="addproduct-storebuttons-post">
-                                    <button type="button" onClick={handlePostListing}  disabled={isSubmitting}>
+                                    <button type="button" onClick={handlePostListing} disabled={isSubmitting}>
                                         Post Listing
                                     </button>
                                 </div>

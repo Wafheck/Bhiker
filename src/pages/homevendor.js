@@ -94,7 +94,7 @@ function HomePageVendor() {
 
     const handleLogout = () => {
         localStorage.removeItem("user");
-        alert("Attempt to logout");
+        localStorage.removeItem("authToken");
         navigate("/landingpage");
     }
 
@@ -117,8 +117,8 @@ function HomePageVendor() {
         return (
             <div className="listing-card">
                 {/* Use your image logic; fallback if missing */}
-                <img src={listing.imageUrl || cardImage } alt={listing.model} style={{ width: "100%", height: 120, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }}/>
-                <h3 style={{fontWeight: "bold", justifyItems: "center"}}>{listing.name}</h3>
+                <img src={listing.imageUrl || cardImage} alt={listing.model} style={{ width: "100%", height: 120, border: "1px solid black", objectFit: "cover", borderRadius: 8, marginBottom: 8 }} />
+                <h3 style={{ fontWeight: "bold", justifyItems: "center" }}>{listing.name}</h3>
                 <div className="model-button">
                     <button type="button" className={typeClass}>{listing.type}</button>
                 </div>
@@ -127,7 +127,7 @@ function HomePageVendor() {
                 <p><b>Price:</b> ₹{listing.price} / {listing.frequency}</p>
                 <p><b>Availability:</b> {listing.available}</p>
                 <p className={statusClass}>{listing.listStatus}</p>
-                <button className="view-button" onClick={() => navigate("/EditListing", { state: { productKey: listing.productID } })} style={{marginTop: 8}}>
+                <button className="view-button" onClick={() => navigate("/EditListing", { state: { productKey: listing.productID } })} style={{ marginTop: 8 }}>
                     View Listing
                 </button>
             </div>
@@ -149,8 +149,8 @@ function HomePageVendor() {
 
                 <div className="home-right">
                     <img src={addIcon} alt="add icon" width={32} height={32}
-                         style={{cursor: "pointer", borderRadius: "50%"}}
-                         onClick={toggleAddDropdown}
+                        style={{ cursor: "pointer", borderRadius: "50%" }}
+                        onClick={toggleAddDropdown}
                     />
                     {showAddDropdown && (
                         <div className="addmenu-drop">
@@ -166,8 +166,8 @@ function HomePageVendor() {
                         </div>
                     )}
                     <img src={userIcon} alt="user icon" width={32} height={32}
-                         style={{cursor: "pointer", borderRadius: "50%"}}
-                         onClick={toggleShowDropdown}
+                        style={{ cursor: "pointer", borderRadius: "50%" }}
+                        onClick={toggleShowDropdown}
                     />
                     {showUserDropdown && (
                         <div className="usermenu-drop">
@@ -186,9 +186,9 @@ function HomePageVendor() {
                     <label>Sidebar</label>
                 </div>
                 <div className="listings-section">
-                    <h2 style={{margin: "1rem 0", fontWeight: "bold"}}>Your Listings</h2>
+                    <h2 style={{ margin: "1rem 0", fontWeight: "bold" }}>Your Listings</h2>
                     {loading ? (
-                        <img src={Loadgif}/>
+                        <img src={Loadgif} />
                     ) : error ? (
                         <div style={{ color: "red" }}>{error}</div>
                     ) : listings.length === 0 ? (

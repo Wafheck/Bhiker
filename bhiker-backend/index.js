@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 axios.defaults.withCredentials = true;
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001' , 'https://www.bhiker.me'],
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://www.bhiker.me'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -51,10 +51,7 @@ function keepAlive() {
 }
 
 // Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
+mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log("Connected to MongoDB");
 
     app.listen(PORT, () => {
@@ -63,7 +60,7 @@ mongoose.connect(process.env.MONGO_URI, {
         // Start keep-alive pings only in production (on Render)
         if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
             setInterval(keepAlive, PING_INTERVAL);
-            console.log('🔄 Keep-alive pings started (every 14 minutes)');
+            console.log('🔄 Keep-alive pings started (every 4 minutes)');
         }
     });
 }).catch((error) => {
