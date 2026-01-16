@@ -26,6 +26,9 @@ app.use("/api/auth", authRoutes);
 const productsRouter = require("./routes/products");
 app.use("/api/products", productsRouter);
 
+const bookingsRouter = require("./routes/bookings");
+app.use("/api/bookings", bookingsRouter);
+
 
 // Add these connection event listeners **before** mongoose.connect()
 mongoose.connection.on("connected", () => {

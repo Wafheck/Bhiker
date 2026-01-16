@@ -23,6 +23,10 @@ function ProductView() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [position, setPosition] = useState([13.3557, 74.7898]);
     const [bookingMessage, setBookingMessage] = useState("");
+    const [bookingError, setBookingError] = useState("");
+    const [additionalRequests, setAdditionalRequests] = useState("");
+    const [activeBooking, setActiveBooking] = useState(null);
+    const [isBooking, setIsBooking] = useState(false);
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -81,7 +85,30 @@ function ProductView() {
                 setLoading(false);
             }
         }
+
+        async function fetchActiveBooking() {
+            try {
+                const res = await fetch(
+                    `${process.env.REACT_APP_API_URL}/api/bookings/mine`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+                if (res.ok) {
+                    const data = await res.json();
+                    setActiveBooking(data.booking);
+                }
+            } catch (err) {
+                console.error("Fetch booking error:", err);
+            }
+        }
+
         fetchProduct();
+        fetchActiveBooking();
     }, [user, productID, navigate]);
 
     const toggleDropdown = () => {
@@ -94,14 +121,102 @@ function ProductView() {
         navigate("/landingpage");
     };
 
-    const handleBookNow = () => {
-        // Placeholder for booking logic
-        setBookingMessage("Booking request sent! The vendor will contact you soon.");
-        // In production, this would call an API to create a booking
+    const handleBookNow = async () => {
+        const token = localStorage.getItem("authToken");
+        setIsBooking(true);
+        setBookingError("");
+
+        try {
+            const res = await fetch(
+                `${process.env.REACT_APP_API_URL}/api/bookings`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        productID,
+                        additionalRequests
+                    })
+                }
+            );
+            const data = await res.json();
+            if (!res.ok) {
+                setBookingError(data.error || "Failed to create booking");
+            } else {
+                setBookingMessage("Booking request sent! The vendor has been notified.");
+                setActiveBooking(data.booking);
+            }
+        } catch (err) {
+            setBookingError("Failed to create booking. Please try again.");
+        }
+        setIsBooking(false);
+    };
+
+    const handleCancelBooking = async () => {
+        if (!activeBooking) return;
+        const token = localStorage.getItem("authToken");
+
+        try {
+            const res = await fetch(
+                `${process.env.REACT_APP_API_URL}/api/bookings/${activeBooking.bookingID}/cancel`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+            if (res.ok) {
+                setActiveBooking(null);
+                setBookingMessage("");
+                setBookingError("");
+            }
+        } catch (err) {
+            console.error("Cancel booking error:", err);
+        }
     };
 
     const handleGoBack = () => {
         navigate("/home");
+    };
+
+    // Helper functions
+    const formatListedTime = (createdAt) => {
+        const now = new Date();
+        const listed = new Date(createdAt);
+        const diffMs = now - listed;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 60) return `Listed ${diffMins} minutes ago`;
+        if (diffHours < 24) return `Listed ${diffHours} hours ago`;
+        if (diffDays === 1) return "Listed yesterday";
+        if (diffDays < 7) return `Listed ${diffDays} days ago`;
+        return `Listed on ${listed.toLocaleDateString()}`;
+    };
+
+    const formatBookedCount = (count) => {
+        if (!count || count === 0) return "No bookings yet";
+        if (count < 5) return `${count} bookings`;
+        if (count < 10) return "5+ bookings";
+        if (count < 20) return "10+ bookings";
+        if (count < 50) return "20+ bookings";
+        if (count < 100) return "50+ bookings";
+        if (count < 200) return "100+ bookings";
+        return "200+ bookings";
+    };
+
+    const getTrustBadgeClass = (trustLevel) => {
+        switch (trustLevel) {
+            case "new": return "trust-badge new";
+            case "nominal": return "trust-badge nominal";
+            case "high": return "trust-badge high";
+            default: return "trust-badge";
+        }
     };
 
     if (!productID) {
@@ -118,6 +233,7 @@ function ProductView() {
     }
 
     const productImage = product ? (modelImageMap[product.model] || placeholderImage) : placeholderImage;
+    const hasActiveBookingForThis = activeBooking && activeBooking.productID === productID;
 
     return (
         <div className="app">
@@ -173,6 +289,33 @@ function ProductView() {
                                 alt={product.name}
                                 className="product-view-image"
                             />
+
+                            {/* Vendor Details Section */}
+                            {product.vendor && (
+                                <div className="vendor-section">
+                                    <h3>Vendor Details</h3>
+                                    <div className="vendor-info">
+                                        <div className="vendor-row">
+                                            <span className="vendor-label">Name:</span>
+                                            <span className="vendor-value">{product.vendor.name}</span>
+                                        </div>
+                                        <div className="vendor-row">
+                                            <span className="vendor-label">Trust:</span>
+                                            <span className={getTrustBadgeClass(product.vendor.trustLevel)}>
+                                                {product.vendor.trustLabel}
+                                            </span>
+                                        </div>
+                                        <div className="vendor-row">
+                                            <span className="vendor-label">Listed:</span>
+                                            <span className="vendor-value">{formatListedTime(product.createdAt)}</span>
+                                        </div>
+                                        <div className="vendor-row">
+                                            <span className="vendor-label">Popularity:</span>
+                                            <span className="booked-badge">{formatBookedCount(product.bookedCount)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="product-view-right">
@@ -223,15 +366,55 @@ function ProductView() {
                                 </MapContainer>
                             </div>
 
-                            {bookingMessage ? (
-                                <div className="booking-success">
-                                    ✅ {bookingMessage}
-                                </div>
-                            ) : (
-                                <button onClick={handleBookNow} className="book-now-button">
-                                    📅 Book Now
-                                </button>
-                            )}
+                            {/* Booking Section */}
+                            <div className="booking-section">
+                                {hasActiveBookingForThis ? (
+                                    <div className="active-booking">
+                                        <div className="booking-success">
+                                            ✅ You have booked this vehicle!
+                                        </div>
+                                        <p>Booking ID: {activeBooking.bookingID}</p>
+                                        <p>Status: {activeBooking.status}</p>
+                                        <button onClick={handleCancelBooking} className="cancel-booking-button">
+                                            ❌ Cancel Booking
+                                        </button>
+                                    </div>
+                                ) : activeBooking ? (
+                                    <div className="booking-blocked">
+                                        <p>⚠️ You already have an active booking.</p>
+                                        <p>Cancel your current booking to book another vehicle.</p>
+                                        <button
+                                            onClick={() => navigate("/product", { state: { productID: activeBooking.productID } })}
+                                            className="view-button"
+                                        >
+                                            View Current Booking
+                                        </button>
+                                    </div>
+                                ) : bookingMessage ? (
+                                    <div className="booking-success">
+                                        ✅ {bookingMessage}
+                                    </div>
+                                ) : (
+                                    <>
+                                        <h3>Book This Vehicle</h3>
+                                        <textarea
+                                            className="additional-requests"
+                                            placeholder="Any additional requests? (optional)"
+                                            value={additionalRequests}
+                                            onChange={(e) => setAdditionalRequests(e.target.value)}
+                                            rows={3}
+                                        />
+                                        {bookingError && <p className="booking-error">{bookingError}</p>}
+                                        <button
+                                            onClick={handleBookNow}
+                                            className="book-now-button"
+                                            disabled={isBooking}
+                                        >
+                                            {isBooking ? "Booking..." : "📅 Book Now"}
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}

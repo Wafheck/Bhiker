@@ -19,6 +19,7 @@ const productSchema = new mongoose.Schema({
     desc: { type: String, required: true },
     available: { type: String, required: true },
     listStatus: { type: String, required: true },
+    bookedCount: { type: Number, default: 0 }
 }, { timestamps: true });
 
 

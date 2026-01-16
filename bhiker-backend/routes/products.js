@@ -1,6 +1,7 @@
 const express = require("express");
 const { authenticateToken, requireVendor } = require("../middleware/auth")
 const Product = require("../models/product");
+const Vendor = require("../models/vendor");
 const router = express.Router();
 
 router.post(
@@ -44,19 +45,55 @@ router.get(
 );
 
 // PUBLIC: View single product details (for users)
-// Excludes sensitive info like license plate number
+// Includes vendor info but excludes sensitive fields
 router.get(
     "/view/:productID",
     authenticateToken,
     async (req, res) => {
         try {
             const { productID } = req.params;
-            const product = await Product.findOne({ productID, listStatus: "active" })
-                .select("-licenseno -vendorID"); // Hide sensitive fields
+            const product = await Product.findOne({ productID, listStatus: "active" });
             if (!product) {
                 return res.status(404).json({ error: "Product not found or not available." });
             }
-            res.json(product);
+
+            // Get vendor info
+            const vendor = await Vendor.findOne({ vendorID: product.vendorID });
+
+            // Calculate vendor trust level based on account age
+            let trustLevel = "new";
+            let trustLabel = "New Vendor";
+            if (vendor) {
+                const accountAgeMs = Date.now() - new Date(vendor.createdAt).getTime();
+                const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+                const oneMonthMs = 30 * 24 * 60 * 60 * 1000;
+
+                if (accountAgeMs < oneWeekMs) {
+                    trustLevel = "new";
+                    trustLabel = "New Vendor";
+                } else if (accountAgeMs < oneMonthMs) {
+                    trustLevel = "nominal";
+                    trustLabel = "Nominally Trusted";
+                } else {
+                    trustLevel = "high";
+                    trustLabel = "Highly Trusted";
+                }
+            }
+
+            // Build response without sensitive fields
+            const productData = product.toObject();
+            delete productData.licenseno;
+            delete productData.vendorID;
+
+            res.json({
+                ...productData,
+                vendor: vendor ? {
+                    name: `${vendor.firstname} ${vendor.lastname}`,
+                    createdAt: vendor.createdAt,
+                    trustLevel,
+                    trustLabel
+                } : null
+            });
         } catch (err) {
             console.error("❌ [PRODUCTS] View product failed:", err);
             res.status(500).json({ error: err.message });
