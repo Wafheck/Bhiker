@@ -210,10 +210,15 @@ router.post("/login", validateLogin, checkValidation, async (req, res) => {
             userId: user._id,
             email: user.email,
             role: user.role,
+            firstname: user.firstname,
+            lastname: user.lastname,
         };
 
         if (role === 'vendor') {
             tokenPayload.vendorID = user.vendorID;
+        } else {
+            // Regular user - include userID
+            tokenPayload.userID = user.userID;
         }
 
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "1h" });
