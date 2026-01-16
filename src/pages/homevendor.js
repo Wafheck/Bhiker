@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 import userIcon from "../icons/user.png";
 import addIcon from "../icons/add.png";
 import Userlocation from "../components/userlocation";
-import honda_activa from "../vehicles/honda_activa.jpg";
-import tvs_apache from "../vehicles/tvs_apache.jpg";
-import hero_splendor from "../vehicles/hero_splendor.png";
-import bajaj_pulsar from "../vehicles/bajaj_pulsar.jpg";
-import suzuki_access from "../vehicles/suzuki_access.jpg";
-import placeholder from "../vehicles/addlist_placeholder.png"
+import { modelImageMap, placeholderImage } from "../utils/vehicleImages";
 import Loadgif from "../images/loading.gif";
 
 
@@ -23,13 +18,6 @@ function HomePageVendor() {
     const [searchTerm, setSearchTerm] = useState("");
     const [typeFilters, setTypeFilters] = useState([]);
     const [statusFilters, setStatusFilters] = useState([]);
-    const modelImageMap = {
-        honda_activa: honda_activa,
-        tvs_apache: tvs_apache,
-        hero_splendor: hero_splendor,
-        bajaj_pulsar: bajaj_pulsar,
-        suzuki_access: suzuki_access,
-    };
 
 
     useEffect(() => {
@@ -114,7 +102,7 @@ function HomePageVendor() {
     }
 
     function ListingCard({ listing }) {
-        const cardImage = modelImageMap[listing.model] || placeholder;
+        const cardImage = modelImageMap[listing.model] || placeholderImage;
         const typeClass = listing.type;
         const statusClass = listing.listStatus;
         return (
