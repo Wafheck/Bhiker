@@ -168,7 +168,7 @@ function AddListing() {
             ...listData,
             model: e.value
         });
-        setVehicleImage(modelImageMap[selectedModel] || placeholder);
+        setVehicleImage(modelImageMap[selectedModel] || placeholderImage);
     };
 
     const geocodePincode = async () => {

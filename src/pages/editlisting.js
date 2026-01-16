@@ -170,7 +170,7 @@ function EditListing() {
             ...listData,
             model: e.value
         });
-        setVehicleImage(modelImageMap[selectedModel] || placeholder);
+        setVehicleImage(modelImageMap[selectedModel] || placeholderImage);
     };
 
     const geocodePincode = async () => {
@@ -260,7 +260,7 @@ function EditListing() {
                     ...ld,
                     ...product,
                 }));
-                setVehicleImage(modelImageMap[product.model] || placeholder);
+                setVehicleImage(modelImageMap[product.model] || placeholderImage);
                 setIsSubmitting(false);
                 try {
                     const response = await fetch(
