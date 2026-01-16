@@ -10,6 +10,7 @@ import HomePageVendor from './pages/homevendor.js';
 import Addlisting from "./pages/addlisting.js";
 import VendorSettings from "./pages/vendorsettings.js";
 import EditListing from "./pages/editlisting"
+import ProductView from "./pages/ProductView"
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                 <Route path="addlisting" element={<Addlisting />} />
                 <Route path="vendorsettings" element={<VendorSettings />} />
                 <Route path="editlisting" element={<EditListing />} />
+                <Route path="product" element={<ProductView />} />
             </Routes>
         </BrowserRouter>
     );

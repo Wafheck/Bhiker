@@ -24,6 +24,46 @@ router.post(
     }
 );
 
+// PUBLIC: Browse all active products (for users)
+// Excludes sensitive info like license plate number
+router.get(
+    "/browse",
+    authenticateToken,
+    async (req, res) => {
+        try {
+            // Only return active listings
+            const products = await Product.find({ listStatus: "active" })
+                .select("-licenseno -vendorID") // Hide sensitive fields
+                .sort({ createdAt: -1 });
+            res.json({ products });
+        } catch (err) {
+            console.error("❌ [PRODUCTS] Browse failed:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+);
+
+// PUBLIC: View single product details (for users)
+// Excludes sensitive info like license plate number
+router.get(
+    "/view/:productID",
+    authenticateToken,
+    async (req, res) => {
+        try {
+            const { productID } = req.params;
+            const product = await Product.findOne({ productID, listStatus: "active" })
+                .select("-licenseno -vendorID"); // Hide sensitive fields
+            if (!product) {
+                return res.status(404).json({ error: "Product not found or not available." });
+            }
+            res.json(product);
+        } catch (err) {
+            console.error("❌ [PRODUCTS] View product failed:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+);
+
 router.get(
     "/mine",
     authenticateToken,   // checks JWT, sets req.user
