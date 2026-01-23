@@ -1042,3 +1042,464 @@ button:hover {
 .cancel-booking-button:hover {
   background: #d32f2f;
 }
+
+/* ===============================================
+   MOBILE RESPONSIVE STYLES
+   =============================================== */
+
+/* Tablet and Small Desktop (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .listing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .addproduct-content {
+    flex-direction: column;
+  }
+
+  .addproduct-content-left,
+  .addproduct-content-center,
+  .addproduct-content-right {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .addproduct-content-center {
+    border-left: none;
+    border-right: none;
+  }
+
+  .addproduct-storebuttons {
+    gap: 20px;
+    justify-content: center;
+  }
+}
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+
+  /* Header responsive */
+  .home-header {
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    gap: 10px;
+  }
+
+  .home-left {
+    order: 1;
+  }
+
+  .home-center {
+    order: 3;
+    width: 100%;
+    transform: none;
+    margin: 0;
+    justify-content: center;
+  }
+
+  .home-right {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .home-decor1 {
+    display: none;
+  }
+
+  .home-decor2 {
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  /* Main layout with sidebar */
+  .listproductven {
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .listproductven-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .sidebar-section {
+    padding: 8px 0;
+  }
+
+  .sidebar-section h4 {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .listings-section {
+    padding: 10px;
+  }
+
+  .listing-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  /* Product view responsive */
+  .product-view-content {
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .product-view-left,
+  .product-view-right {
+    width: 100%;
+  }
+
+  .product-view-title {
+    font-size: 1.5rem;
+  }
+
+  .product-view-image {
+    max-height: 300px;
+  }
+
+  /* Add/Edit product */
+  .addproduct-content-left img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+
+  .addproduct-description-input textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .addproduct-address-map {
+    height: 250px;
+  }
+
+  /* Hero section */
+  .hero h1 {
+    font-size: 2.5rem;
+    padding: 2rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  /* Steps section */
+  .steps {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .step {
+    max-width: 300px;
+  }
+
+  .step img {
+    height: 180px;
+  }
+
+  /* Form group */
+  .form-group {
+    padding: 1.5rem 2rem;
+    border-radius: 25px;
+    margin: 0 10px;
+  }
+
+  /* Register container */
+  .register-container {
+    padding: 20px;
+  }
+
+  /* User menu dropdown */
+  .usermenu-drop,
+  .addmenu-drop {
+    right: 5px;
+    width: 160px;
+  }
+
+  /* Browse body */
+  .browse-body img {
+    height: 300px;
+    margin-top: 2rem;
+  }
+
+  /* SelectButton responsive */
+  .p-selectbutton .p-button {
+    min-width: 80px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    margin: 5px;
+  }
+
+  /* Vendor section */
+  .vendor-section {
+    padding: 12px;
+  }
+
+  .vendor-row {
+    flex-wrap: wrap;
+  }
+
+  /* Booking section */
+  .booking-section {
+    padding: 15px;
+  }
+
+  .book-now-button {
+    width: 100%;
+    padding: 12px 20px;
+  }
+
+  .cancel-booking-button {
+    width: 100%;
+  }
+}
+
+/* Mobile phones (max-width: 480px) */
+@media (max-width: 480px) {
+
+  /* Header */
+  .home-header {
+    padding: 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .home-decor2 {
+    display: none;
+  }
+
+  .home-location {
+    font-size: 0.8rem;
+  }
+
+  /* Listing grid - single column */
+  .listing-grid {
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .listing-card {
+    padding: 12px;
+    min-height: 300px;
+  }
+
+  .listings-section {
+    overflow: visible;
+    height: auto;
+  }
+
+  /* Hero section */
+  .hero {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .hero h1 {
+    font-size: 1.75rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    margin: 1rem 0;
+  }
+
+  .browse-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Steps */
+  .step img {
+    height: 150px;
+  }
+
+  /* Form group */
+  .form-group {
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .form-group input {
+    font-size: 16px;
+    /* Prevents iOS zoom on focus */
+  }
+
+  /* SelectButton for tight spaces */
+  .p-selectbutton {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .p-selectbutton .p-button {
+    min-width: 70px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+    margin: 3px;
+  }
+
+  /* Product view */
+  .product-view-container {
+    padding: 10px;
+  }
+
+  .product-view-content {
+    padding: 10px;
+  }
+
+  .product-view-title {
+    font-size: 1.25rem;
+  }
+
+  .product-view-image {
+    max-height: 250px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+
+  /* Add product inputs */
+  .addproduct-name-input input,
+  .addproduct-licenseno-input input,
+  .addproduct-price-input input,
+  .addproduct-address-input input {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .addproduct-description-input textarea {
+    font-size: 16px;
+  }
+
+  .addproduct-address-map {
+    height: 200px;
+  }
+
+  .addproduct-storebuttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .addproduct-storebuttons button {
+    width: 100%;
+  }
+
+  /* Booking */
+  .additional-requests {
+    font-size: 16px;
+  }
+
+  .book-now-button {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  /* Auth button */
+  .auth-btn {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  /* Type tags smaller */
+  .type-tag {
+    font-size: 0.7rem;
+    padding: 3px 7px;
+  }
+
+  /* Sidebar filters */
+  .sidebar-search {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .sidebar-checkbox {
+    font-size: 0.8rem;
+  }
+
+  /* Map container in product view */
+  .product-view-map {
+    margin-top: 5px;
+  }
+
+  /* Dropdowns */
+  .usermenu-drop,
+  .addmenu-drop {
+    width: 140px;
+    padding: 8px;
+  }
+
+  /* Browse body */
+  .browse-body img {
+    height: 200px;
+  }
+
+  .browse-body h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Touch-friendly minimum sizes */
+@media (hover: none) and (pointer: coarse) {
+
+  button,
+  .auth-btn,
+  .browse-button,
+  .view-button,
+  .back-button,
+  .book-now-button,
+  .cancel-booking-button,
+  .usermenu-logout {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .sidebar-checkbox {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar-checkbox input[type="checkbox"],
+  .sidebar-checkbox input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+}
